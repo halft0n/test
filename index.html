@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>华容道 - Klotski</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .info {
+      margin-bottom: 15px;
+      color: #555;
+    }
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      grid-template-rows: repeat(5, 60px);
+      gap: 2px;
+      background: #333;
+      padding: 4px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      user-select: none;
+    }
+    .block {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid #333;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .block:hover {
+      filter: brightness(1.1);
+    }
+    .hero { background: #ff6b6b; color: white; } /* 主角大块 */
+    .vertical { background: #4ecdc4; color: white; }
+    .horizontal { background: #ffe66d; color: #333; }
+    .small { background: #a8e6cf; color: #333; }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>华容道 (Klotski)</h1>
+  <div class="info">目标：将红色大块移到底部中间出口位置</div>
+  <div id="game-board"></div>
+  <button id="reset-btn">重新开始</button>
+
+  <script>
+    // 初始布局（4列 x 5行）
+    // 数字代表块ID，0为空
+    const initialLayout = [
+      [1, 1, 2, 3],
+      [1, 1, 2, 3],
+      [4, 5, 6, 7],
+      [4, 8, 9, 7],
+      [0, 8, 9, 0]
+    ];
+
+    // 块定义：id -> { w, h, class }
+    const blocks = {
+      1: { w: 2, h: 2, cls: 'hero' },     // 主角（2x2）
+      2: { w: 1, h: 2, cls: 'vertical' },
+      3: { w: 1, h: 2, cls: 'vertical' },
+      4: { w: 1, h: 2, cls: 'vertical' },
+      7: { w: 1, h: 2, cls: 'vertical' },
+      5: { w: 2, h: 1, cls: 'horizontal' },
+      6: { w: 2, h: 1, cls: 'horizontal' },
+      8: { w: 1, h: 2, cls: 'vertical' },
+      9: { w: 1, h: 2, cls: 'vertical' },
+    };
+
+    let board = [];
+    let blockPositions = {}; // id -> { x, y }
+
+    function cloneBoard(layout) {
+      return layout.map(row => [...row]);
+    }
+
+    function initGame() {
+      board = cloneBoard(initialLayout);
+      updateBlockPositions();
+      render();
+    }
+
+    function updateBlockPositions() {
+      blockPositions = {};
+      for (let y = 0; y < 5; y++) {
+        for (let x = 0; x < 4; x++) {
+          const id = board[y][x];
+          if (id !== 0 && !blockPositions[id]) {
+            blockPositions[id] = { x, y };
+          }
+        }
+      }
+    }
+
+    function render() {
+      const container = document.getElementById('game-board');
+      container.innerHTML = '';
+      // 先画背景格子
+      for (let i = 0; i < 20; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        container.appendChild(cell);
+      }
+
+      // 再画块（绝对定位）
+      Object.entries(blockPositions).forEach(([id, pos]) => {
+        const block = blocks[parseInt(id)];
+        if (!block) return;
+
+        const div = document.createElement('div');
+        div.className = `block ${block.cls}`;
+        div.style.width = `${block.w * 60 + (block.w - 1) * 2}px`;
+        div.style.height = `${block.h * 60 + (block.h - 1) * 2}px`;
+        div.style.left = `${pos.x * 62 + 4}px`; // 60px + 2px gap
+        div.style.top = `${pos.y * 62 + 4}px`;
+        div.dataset.id = id;
+        div.textContent = '';
+        container.appendChild(div);
+
+        div.addEventListener('click', () => moveBlock(parseInt(id)));
+      });
+    }
+
+    function canMove(id, dx, dy) {
+      const pos = blockPositions[id];
+      const block = blocks[id];
+      const newX = pos.x + dx;
+      const newY = pos.y + dy;
+
+      // 边界检查
+      if (newX < 0 || newY < 0 || newX + block.w > 4 || newY + block.h > 5) {
+        return false;
+      }
+
+      // 检查目标区域是否全为空
+      for (let y = newY; y < newY + block.h; y++) {
+        for (let x = newX; x < newX + block.w; x++) {
+          if (board[y][x] !== 0) {
+            // 如果是自己的位置，跳过
+            if (x >= pos.x && x < pos.x + block.w &&
+                y >= pos.y && y < pos.y + block.h) {
+              continue;
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function moveBlock(id) {
+      const directions = [
+        { dx: 0, dy: -1 }, // 上
+        { dx: 0, dy: 1 },  // 下
+        { dx: -1, dy: 0 }, // 左
+        { dx: 1, dy: 0 }   // 右
+      ];
+
+      let moved = false;
+      for (const dir of directions) {
+        if (canMove(id, dir.dx, dir.dy)) {
+          applyMove(id, dir.dx, dir.dy);
+          moved = true;
+          break; // 一次只移动一个方向（简化交互）
+        }
+      }
+
+      if (moved) {
+        render();
+        if (checkWin()) {
+          setTimeout(() => alert('恭喜！你成功解开了华容道！🎉'), 100);
+        }
+      }
+    }
+
+    function applyMove(id, dx, dy) {
+      const pos = blockPositions[id];
+      const block = blocks[id];
+
+      // 清除原位置
+      for (let y = pos.y; y < pos.y + block.h; y++) {
+        for (let x = pos.x; x < pos.x + block.w; x++) {
+          board[y][x] = 0;
+        }
+      }
+
+      // 设置新位置
+      const newX = pos.x + dx;
+      const newY = pos.y + dy;
+      for (let y = newY; y < newY + block.h; y++) {
+        for (let x = newX; x < newX + block.w; x++) {
+          board[y][x] = id;
+        }
+      }
+
+      blockPositions[id] = { x: newX, y: newY };
+    }
+
+    function checkWin() {
+      // 红色大块（id=1）应位于 (1,3) 和 (2,3)、(1,4)、(2,4) —— 即底部中间
+      return (
+        board[3][1] === 1 &&
+        board[3][2] === 1 &&
+        board[4][1] === 1 &&
+        board[4][2] === 1
+      );
+    }
+
+    document.getElementById('reset-btn').addEventListener('click', initGame);
+
+    // 启动游戏
+    initGame();
+  </script>
+</body>
+</html>
