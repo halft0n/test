@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>华容道游戏</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>华容道游戏 - 兼容版</title>
     <style>
         * {
             margin: 0;
@@ -17,15 +16,15 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #f0f0f0;
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
         
         .container {
-            max-width: 900px;
             width: 100%;
+            max-width: 900px;
             background-color: rgba(30, 30, 46, 0.9);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
@@ -35,141 +34,131 @@
         
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
             border-bottom: 2px solid #00adb5;
         }
         
         h1 {
             color: #00adb5;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
         
         .subtitle {
             color: #eeeeee;
-            font-size: 1.1rem;
+            font-size: 1rem;
             opacity: 0.8;
         }
         
-        .game-area {
+        .main-content {
             display: flex;
             flex-wrap: wrap;
             gap: 30px;
-            margin-bottom: 30px;
         }
         
-        .game-board {
+        .game-section {
             flex: 1;
             min-width: 300px;
         }
         
-        .game-info {
+        .control-section {
             flex: 1;
             min-width: 300px;
             background-color: rgba(40, 40, 60, 0.7);
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .board {
+        .game-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 1fr);
-            gap: 10px;
+            gap: 8px;
             background-color: #0f3460;
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 10px;
             aspect-ratio: 1/1;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0 auto 20px;
         }
         
         .tile {
             background: linear-gradient(145deg, #00adb5, #007d83);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             color: white;
             cursor: pointer;
             user-select: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         
         .tile:hover {
             transform: scale(1.03);
-            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(145deg, #00c4cc, #008d94);
         }
         
-        .tile.empty {
+        .empty {
             background: transparent;
             box-shadow: none;
             cursor: default;
         }
         
-        .tile.empty:hover {
+        .empty:hover {
             transform: none;
-            box-shadow: none;
         }
         
         .stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .stat-box {
             background: linear-gradient(145deg, #393e46, #222831);
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            min-width: 130px;
+            flex: 1;
         }
         
         .stat-value {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #00adb5;
             margin-top: 5px;
         }
         
         .stat-label {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #bbbbbb;
         }
         
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 25px;
         }
         
         .btn {
             flex: 1;
             min-width: 120px;
-            padding: 15px 10px;
+            padding: 14px 10px;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
+            transition: all 0.3s;
         }
         
         .btn-primary {
@@ -192,16 +181,12 @@
             box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
         }
         
-        .btn:active {
-            transform: translateY(1px);
-        }
-        
         .difficulty {
-            margin-top: 20px;
+            margin-bottom: 25px;
         }
         
         .difficulty h3 {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #eeeeee;
         }
         
@@ -218,20 +203,19 @@
             border-radius: 8px;
             color: #bbbbbb;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
         
         .diff-btn.active {
             background-color: #00adb5;
             color: white;
-            box-shadow: 0 4px 10px rgba(0, 173, 181, 0.4);
         }
         
         .instructions {
             background-color: rgba(40, 40, 60, 0.7);
             border-radius: 15px;
             padding: 20px;
-            margin-top: 30px;
+            margin-top: 25px;
             border-left: 5px solid #00adb5;
         }
         
@@ -241,9 +225,10 @@
         }
         
         .instructions p {
-            line-height: 1.6;
-            margin-bottom: 10px;
+            line-height: 1.5;
+            margin-bottom: 8px;
             color: #cccccc;
+            font-size: 0.95rem;
         }
         
         .win-message {
@@ -259,7 +244,7 @@
             z-index: 100;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.5s ease;
+            transition: opacity 0.5s;
         }
         
         .win-message.show {
@@ -269,29 +254,22 @@
         
         .win-content {
             background: linear-gradient(145deg, #1a1a2e, #16213e);
-            padding: 40px;
-            border-radius: 20px;
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
-            max-width: 500px;
+            max-width: 450px;
             width: 90%;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-            transform: scale(0.9);
-            transition: transform 0.5s ease;
-        }
-        
-        .win-message.show .win-content {
-            transform: scale(1);
         }
         
         .win-content h2 {
             color: #00ff88;
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
         }
         
         .win-stats {
-            font-size: 1.3rem;
-            margin-bottom: 30px;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
             color: #eeeeee;
         }
         
@@ -300,13 +278,21 @@
             font-weight: bold;
         }
         
+        .mobile-notice {
+            display: none;
+            background-color: rgba(0, 173, 181, 0.1);
+            border: 1px solid #00adb5;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #bbbbbb;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
-            .game-area {
+            .main-content {
                 flex-direction: column;
-            }
-            
-            .stats {
-                grid-template-columns: 1fr;
             }
             
             .controls {
@@ -318,25 +304,43 @@
             }
             
             .tile {
-                font-size: 2rem;
+                font-size: 1.6rem;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
+            }
+            
+            .mobile-notice {
+                display: block;
             }
         }
         
         @media (max-width: 480px) {
             .container {
-                padding: 15px;
+                padding: 20px;
             }
             
-            .game-info {
+            .control-section {
                 padding: 20px;
             }
             
             .tile {
-                font-size: 1.8rem;
+                font-size: 1.4rem;
+            }
+            
+            .game-board {
+                gap: 6px;
+                padding: 8px;
+            }
+            
+            .stat-box {
+                min-width: 110px;
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -344,16 +348,20 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-puzzle-piece"></i> 华容道游戏</h1>
+            <h1>华容道游戏</h1>
             <p class="subtitle">移动方块，按数字顺序从1到15排列即获胜</p>
         </header>
         
-        <div class="game-area">
-            <div class="game-board">
-                <div class="board" id="board"></div>
-            </div>
-            
-            <div class="game-info">
+        <div class="mobile-notice">
+            提示：您可以使用手指拖动方块，或点击与空白相邻的方块
+        </div>
+        
+        <div class="main-content">
+            <div class="game-section">
+                <div class="game-board" id="game-board">
+                    <!-- 游戏方块将通过JavaScript动态生成 -->
+                </div>
+                
                 <div class="stats">
                     <div class="stat-box">
                         <div class="stat-label">移动步数</div>
@@ -364,72 +372,75 @@
                         <div class="stat-value" id="timer">00:00</div>
                     </div>
                 </div>
-                
+            </div>
+            
+            <div class="control-section">
                 <div class="controls">
                     <button class="btn btn-primary" id="shuffle-btn">
-                        <i class="fas fa-random"></i> 开始游戏
+                        开始游戏
                     </button>
                     <button class="btn btn-secondary" id="hint-btn">
-                        <i class="fas fa-lightbulb"></i> 提示
+                        提示
                     </button>
                     <button class="btn btn-secondary" id="reset-btn">
-                        <i class="fas fa-redo"></i> 重新开始
+                        重新开始
                     </button>
                 </div>
                 
                 <div class="difficulty">
-                    <h3><i class="fas fa-sliders-h"></i> 游戏难度</h3>
+                    <h3>游戏难度</h3>
                     <div class="difficulty-buttons">
                         <button class="diff-btn active" data-difficulty="easy">简单 (20步)</button>
                         <button class="diff-btn" data-difficulty="medium">中等 (50步)</button>
                         <button class="diff-btn" data-difficulty="hard">困难 (100步)</button>
                     </div>
                 </div>
+                
+                <div class="instructions">
+                    <h3>游戏说明</h3>
+                    <p>1. 点击与空白位置相邻的方块可以移动该方块</p>
+                    <p>2. 目标是将所有数字方块按顺序排列（从左到右，从上到下）</p>
+                    <p>3. 使用"提示"按钮可以高亮显示可移动的方块</p>
+                    <p>4. 不同的难度会影响初始打乱的步数</p>
+                    <p>5. 尽可能用最少的步数和时间完成游戏</p>
+                </div>
             </div>
-        </div>
-        
-        <div class="instructions">
-            <h3><i class="fas fa-info-circle"></i> 游戏说明</h3>
-            <p>1. 点击与空白位置相邻的方块可以移动该方块</p>
-            <p>2. 目标是将所有数字方块按顺序排列（从左到右，从上到下）</p>
-            <p>3. 使用"提示"按钮可以高亮显示可移动的方块</p>
-            <p>4. 不同的难度会影响初始打乱的步数</p>
-            <p>5. 尽可能用最少的步数和时间完成游戏</p>
         </div>
     </div>
     
     <div class="win-message" id="win-message">
         <div class="win-content">
-            <h2><i class="fas fa-trophy"></i> 恭喜获胜!</h2>
+            <h2>恭喜获胜!</h2>
             <div class="win-stats">
                 <p>完成步数: <span id="win-moves">0</span> 步</p>
                 <p>用时: <span id="win-time">00:00</span></p>
                 <p>难度: <span id="win-difficulty">简单</span></p>
             </div>
             <button class="btn btn-success" id="play-again-btn">
-                <i class="fas fa-play"></i> 再玩一次
+                再玩一次
             </button>
         </div>
     </div>
 
     <script>
         // 游戏状态变量
-        let gameBoard = [];
-        let emptyRow = 3;
-        let emptyCol = 3;
-        let moveCount = 0;
-        let gameTime = 0;
-        let timerInterval = null;
-        let isGameActive = false;
-        let currentDifficulty = 'easy';
-        const difficultySteps = {
-            easy: 20,
-            medium: 50,
-            hard: 100
+        let gameState = {
+            board: [],
+            emptyIndex: 15, // 空白位置索引（0-15）
+            moveCount: 0,
+            gameTime: 0,
+            timerInterval: null,
+            isGameActive: false,
+            currentDifficulty: 'easy',
+            difficultySteps: {
+                easy: 20,
+                medium: 50,
+                hard: 100
+            }
         };
         
         // DOM 元素
-        const boardElement = document.getElementById('board');
+        const gameBoardElement = document.getElementById('game-board');
         const moveCountElement = document.getElementById('move-count');
         const timerElement = document.getElementById('timer');
         const shuffleBtn = document.getElementById('shuffle-btn');
@@ -442,232 +453,199 @@
         const winDifficultyElement = document.getElementById('win-difficulty');
         const playAgainBtn = document.getElementById('play-again-btn');
         
-        // 初始化游戏板
-        function initBoard() {
-            boardElement.innerHTML = '';
-            gameBoard = [];
+        // 初始化游戏
+        function initGame() {
+            // 创建初始数字数组 [1, 2, 3, ..., 15, null]
+            gameState.board = Array.from({length: 15}, (_, i) => i + 1);
+            gameState.board.push(null); // 空白位置
+            gameState.emptyIndex = 15;
             
-            // 创建数字1-15的数组
-            let numbers = Array.from({length: 15}, (_, i) => i + 1);
+            renderBoard();
+            resetGameStats();
+        }
+        
+        // 渲染游戏板
+        function renderBoard() {
+            gameBoardElement.innerHTML = '';
             
-            // 添加一个空位置
-            numbers.push(null);
-            
-            // 填充游戏板
-            let index = 0;
-            for (let row = 0; row < 4; row++) {
-                gameBoard[row] = [];
-                for (let col = 0; col < 4; col++) {
-                    gameBoard[row][col] = numbers[index];
+            gameState.board.forEach((value, index) => {
+                const tile = document.createElement('div');
+                tile.className = value === null ? 'tile empty' : 'tile';
+                
+                if (value !== null) {
+                    tile.textContent = value;
+                    tile.dataset.index = index;
                     
-                    const tile = document.createElement('div');
-                    tile.className = 'tile';
+                    // 添加点击事件
+                    tile.addEventListener('click', function() {
+                        handleTileClick(index);
+                    });
                     
-                    if (numbers[index] === null) {
-                        tile.classList.add('empty');
-                        tile.textContent = '';
-                        emptyRow = row;
-                        emptyCol = col;
-                    } else {
-                        tile.textContent = numbers[index];
-                        tile.dataset.row = row;
-                        tile.dataset.col = col;
-                        tile.addEventListener('click', () => moveTile(row, col));
-                    }
-                    
-                    boardElement.appendChild(tile);
-                    index++;
+                    // 添加触摸事件（移动端支持）
+                    tile.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        handleTileClick(index);
+                    }, {passive: false});
                 }
+                
+                gameBoardElement.appendChild(tile);
+            });
+        }
+        
+        // 处理方块点击
+        function handleTileClick(clickedIndex) {
+            if (!gameState.isGameActive || gameState.board[clickedIndex] === null) {
+                return;
+            }
+            
+            // 检查是否与空白位置相邻
+            if (isAdjacentToEmpty(clickedIndex)) {
+                moveTile(clickedIndex);
             }
         }
         
-        // 检查方块是否可以移动
-        function canMove(row, col) {
-            // 检查是否相邻于空位置
-            return (Math.abs(row - emptyRow) === 1 && col === emptyCol) || 
-                   (Math.abs(col - emptyCol) === 1 && row === emptyRow);
+        // 检查方块是否与空白位置相邻
+        function isAdjacentToEmpty(index) {
+            const emptyRow = Math.floor(gameState.emptyIndex / 4);
+            const emptyCol = gameState.emptyIndex % 4;
+            const tileRow = Math.floor(index / 4);
+            const tileCol = index % 4;
+            
+            // 检查是否在同一行且列相邻，或同一列且行相邻
+            return (tileRow === emptyRow && Math.abs(tileCol - emptyCol) === 1) ||
+                   (tileCol === emptyCol && Math.abs(tileRow - emptyRow) === 1);
         }
         
         // 移动方块
-        function moveTile(row, col) {
-            if (!isGameActive) return;
-            if (!canMove(row, col)) return;
+        function moveTile(fromIndex) {
+            // 交换方块和空白位置
+            [gameState.board[gameState.emptyIndex], gameState.board[fromIndex]] = 
+            [gameState.board[fromIndex], gameState.board[gameState.emptyIndex]];
             
-            // 交换方块和空位置
-            gameBoard[emptyRow][emptyCol] = gameBoard[row][col];
-            gameBoard[row][col] = null;
+            // 更新空白位置索引
+            gameState.emptyIndex = fromIndex;
             
-            // 更新DOM
-            const tiles = document.querySelectorAll('.tile');
-            tiles.forEach(tile => {
-                if (tile.textContent == gameBoard[emptyRow][emptyCol]) {
-                    tile.classList.add('empty');
-                    tile.textContent = '';
-                    tile.dataset.row = emptyRow;
-                    tile.dataset.col = emptyCol;
-                }
-            });
+            // 更新步数
+            gameState.moveCount++;
+            moveCountElement.textContent = gameState.moveCount;
             
-            // 创建新位置的方块
-            const newTile = document.createElement('div');
-            newTile.className = 'tile';
-            newTile.textContent = '';
-            newTile.classList.add('empty');
-            boardElement.children[row * 4 + col].replaceWith(newTile);
+            // 重新渲染游戏板
+            renderBoard();
             
-            // 更新空位置
-            emptyRow = row;
-            emptyCol = col;
-            
-            // 增加步数
-            moveCount++;
-            moveCountElement.textContent = moveCount;
-            
-            // 检查游戏是否完成
+            // 检查是否获胜
             checkWin();
         }
         
-        // 随机打乱游戏板
+        // 打乱游戏板
         function shuffleBoard() {
-            if (!isGameActive) {
+            if (!gameState.isGameActive) {
                 startGame();
             }
             
-            // 根据难度获取打乱步数
-            const shuffleSteps = difficultySteps[currentDifficulty];
+            const shuffleSteps = gameState.difficultySteps[gameState.currentDifficulty];
             
-            // 执行随机移动
+            // 执行多次随机移动来打乱
             for (let i = 0; i < shuffleSteps; i++) {
-                // 获取可移动的相邻方块
-                const possibleMoves = [];
+                // 获取所有可移动的方块索引
+                const movableTiles = [];
                 
-                // 检查上方的方块
-                if (emptyRow > 0) possibleMoves.push({row: emptyRow - 1, col: emptyCol});
-                // 检查下方的方块
-                if (emptyRow < 3) possibleMoves.push({row: emptyRow + 1, col: emptyCol});
-                // 检查左侧的方块
-                if (emptyCol > 0) possibleMoves.push({row: emptyRow, col: emptyCol - 1});
-                // 检查右侧的方块
-                if (emptyCol < 3) possibleMoves.push({row: emptyRow, col: emptyCol + 1});
-                
-                // 随机选择一个移动
-                const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-                
-                // 执行移动（直接操作数组和DOM，不通过moveTile函数，避免计数）
-                gameBoard[emptyRow][emptyCol] = gameBoard[randomMove.row][randomMove.col];
-                gameBoard[randomMove.row][randomMove.col] = null;
-                
-                // 更新DOM
-                const tiles = document.querySelectorAll('.tile');
-                tiles.forEach(tile => {
-                    if (tile.textContent == gameBoard[emptyRow][emptyCol]) {
-                        tile.classList.add('empty');
-                        tile.textContent = '';
-                        tile.dataset.row = emptyRow;
-                        tile.dataset.col = emptyCol;
-                    }
-                });
-                
-                // 创建新位置的方块
-                const newTile = document.createElement('div');
-                newTile.className = 'tile';
-                newTile.textContent = '';
-                newTile.classList.add('empty');
-                boardElement.children[randomMove.row * 4 + randomMove.col].replaceWith(newTile);
-                
-                // 更新空位置
-                emptyRow = randomMove.row;
-                emptyCol = randomMove.col;
-            }
-            
-            // 重新渲染非空方块
-            renderTiles();
-        }
-        
-        // 渲染所有非空方块
-        function renderTiles() {
-            // 清除所有方块
-            const tiles = document.querySelectorAll('.tile:not(.empty)');
-            tiles.forEach(tile => tile.remove());
-            
-            // 添加所有非空方块
-            for (let row = 0; row < 4; row++) {
-                for (let col = 0; col < 4; col++) {
-                    if (gameBoard[row][col] !== null) {
-                        const tile = document.createElement('div');
-                        tile.className = 'tile';
-                        tile.textContent = gameBoard[row][col];
-                        tile.dataset.row = row;
-                        tile.dataset.col = col;
-                        tile.addEventListener('click', () => moveTile(row, col));
-                        
-                        // 插入到正确位置
-                        const position = row * 4 + col;
-                        const emptyTile = boardElement.querySelector('.tile.empty');
-                        if (position < emptyRow * 4 + emptyCol) {
-                            boardElement.insertBefore(tile, emptyTile);
-                        } else {
-                            boardElement.appendChild(tile);
-                        }
-                    }
+                // 检查上方
+                if (gameState.emptyIndex > 3) {
+                    movableTiles.push(gameState.emptyIndex - 4);
                 }
+                // 检查下方
+                if (gameState.emptyIndex < 12) {
+                    movableTiles.push(gameState.emptyIndex + 4);
+                }
+                // 检查左侧
+                if (gameState.emptyIndex % 4 > 0) {
+                    movableTiles.push(gameState.emptyIndex - 1);
+                }
+                // 检查右侧
+                if (gameState.emptyIndex % 4 < 3) {
+                    movableTiles.push(gameState.emptyIndex + 1);
+                }
+                
+                // 随机选择一个可移动的方块
+                const randomIndex = Math.floor(Math.random() * movableTiles.length);
+                const tileToMove = movableTiles[randomIndex];
+                
+                // 移动这个方块
+                [gameState.board[gameState.emptyIndex], gameState.board[tileToMove]] = 
+                [gameState.board[tileToMove], gameState.board[gameState.emptyIndex]];
+                
+                // 更新空白位置索引
+                gameState.emptyIndex = tileToMove;
             }
+            
+            // 重置步数
+            gameState.moveCount = 0;
+            moveCountElement.textContent = gameState.moveCount;
+            
+            // 重新渲染游戏板
+            renderBoard();
         }
         
         // 开始游戏
         function startGame() {
-            if (isGameActive) return;
+            if (gameState.isGameActive) return;
             
-            isGameActive = true;
-            moveCount = 0;
-            moveCountElement.textContent = moveCount;
-            gameTime = 0;
-            updateTimer();
+            gameState.isGameActive = true;
+            resetGameStats();
             
             // 启动计时器
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                gameTime++;
+            clearInterval(gameState.timerInterval);
+            gameState.timerInterval = setInterval(() => {
+                gameState.gameTime++;
                 updateTimer();
             }, 1000);
             
             // 更新按钮文本
-            shuffleBtn.innerHTML = '<i class="fas fa-random"></i> 重新打乱';
+            shuffleBtn.textContent = '重新打乱';
+        }
+        
+        // 重置游戏统计
+        function resetGameStats() {
+            gameState.moveCount = 0;
+            gameState.gameTime = 0;
+            moveCountElement.textContent = gameState.moveCount;
+            updateTimer();
         }
         
         // 更新计时器显示
         function updateTimer() {
-            const minutes = Math.floor(gameTime / 60).toString().padStart(2, '0');
-            const seconds = (gameTime % 60).toString().padStart(2, '0');
+            const minutes = Math.floor(gameState.gameTime / 60).toString().padStart(2, '0');
+            const seconds = (gameState.gameTime % 60).toString().padStart(2, '0');
             timerElement.textContent = `${minutes}:${seconds}`;
         }
         
         // 检查是否获胜
         function checkWin() {
             // 检查是否按顺序排列（1-15，最后一个是空位）
-            let expectedValue = 1;
-            for (let row = 0; row < 4; row++) {
-                for (let col = 0; col < 4; col++) {
-                    // 如果是最后一个位置，应该是空
-                    if (row === 3 && col === 3) {
-                        if (gameBoard[row][col] !== null) return false;
-                    } else {
-                        if (gameBoard[row][col] !== expectedValue) return false;
-                        expectedValue++;
-                    }
+            for (let i = 0; i < 15; i++) {
+                if (gameState.board[i] !== i + 1) {
+                    return false;
                 }
             }
             
+            // 检查最后一个位置是否为空
+            if (gameState.board[15] !== null) {
+                return false;
+            }
+            
             // 游戏获胜
-            isGameActive = false;
-            clearInterval(timerInterval);
+            gameState.isGameActive = false;
+            clearInterval(gameState.timerInterval);
             
             // 更新获胜消息
-            winMovesElement.textContent = moveCount;
+            winMovesElement.textContent = gameState.moveCount;
             winTimeElement.textContent = timerElement.textContent;
-            winDifficultyElement.textContent = 
-                currentDifficulty === 'easy' ? '简单' : 
-                currentDifficulty === 'medium' ? '中等' : '困难';
+            
+            let difficultyText = '简单';
+            if (gameState.currentDifficulty === 'medium') difficultyText = '中等';
+            else if (gameState.currentDifficulty === 'hard') difficultyText = '困难';
+            
+            winDifficultyElement.textContent = difficultyText;
             
             // 显示获胜消息
             setTimeout(() => {
@@ -675,62 +653,66 @@
             }, 500);
         }
         
-        // 显示提示（高亮可移动的方块）
+        // 显示提示
         function showHint() {
-            if (!isGameActive) return;
+            if (!gameState.isGameActive) return;
             
             // 移除之前的高亮
-            const tiles = document.querySelectorAll('.tile');
-            tiles.forEach(tile => tile.style.boxShadow = '');
+            const tiles = document.querySelectorAll('.tile:not(.empty)');
+            tiles.forEach(tile => {
+                tile.style.boxShadow = '';
+            });
             
             // 高亮可移动的方块
-            // 检查上方的方块
-            if (emptyRow > 0) {
-                const tile = document.querySelector(`.tile[data-row="${emptyRow - 1}"][data-col="${emptyCol}"]`);
-                if (tile) tile.style.boxShadow = '0 0 20px #ffdd00';
+            const movableTiles = [];
+            
+            // 检查上方
+            if (gameState.emptyIndex > 3) {
+                movableTiles.push(gameState.emptyIndex - 4);
             }
-            // 检查下方的方块
-            if (emptyRow < 3) {
-                const tile = document.querySelector(`.tile[data-row="${emptyRow + 1}"][data-col="${emptyCol}"]`);
-                if (tile) tile.style.boxShadow = '0 0 20px #ffdd00';
+            // 检查下方
+            if (gameState.emptyIndex < 12) {
+                movableTiles.push(gameState.emptyIndex + 4);
             }
-            // 检查左侧的方块
-            if (emptyCol > 0) {
-                const tile = document.querySelector(`.tile[data-row="${emptyRow}"][data-col="${emptyCol - 1}"]`);
-                if (tile) tile.style.boxShadow = '0 0 20px #ffdd00';
+            // 检查左侧
+            if (gameState.emptyIndex % 4 > 0) {
+                movableTiles.push(gameState.emptyIndex - 1);
             }
-            // 检查右侧的方块
-            if (emptyCol < 3) {
-                const tile = document.querySelector(`.tile[data-row="${emptyRow}"][data-col="${emptyCol + 1}"]`);
-                if (tile) tile.style.boxShadow = '0 0 20px #ffdd00';
+            // 检查右侧
+            if (gameState.emptyIndex % 4 < 3) {
+                movableTiles.push(gameState.emptyIndex + 1);
             }
+            
+            // 高亮这些方块
+            movableTiles.forEach(index => {
+                const tile = document.querySelector(`.tile[data-index="${index}"]`);
+                if (tile) {
+                    tile.style.boxShadow = '0 0 15px #ffdd00';
+                }
+            });
             
             // 3秒后移除高亮
             setTimeout(() => {
-                const tiles = document.querySelectorAll('.tile');
-                tiles.forEach(tile => tile.style.boxShadow = '');
+                movableTiles.forEach(index => {
+                    const tile = document.querySelector(`.tile[data-index="${index}"]`);
+                    if (tile) {
+                        tile.style.boxShadow = '';
+                    }
+                });
             }, 3000);
         }
         
         // 重置游戏
         function resetGame() {
-            clearInterval(timerInterval);
-            isGameActive = false;
-            moveCount = 0;
-            gameTime = 0;
-            moveCountElement.textContent = moveCount;
-            updateTimer();
-            
-            // 重置按钮文本
-            shuffleBtn.innerHTML = '<i class="fas fa-random"></i> 开始游戏';
-            
-            // 初始化游戏板（已排序状态）
-            initBoard();
+            clearInterval(gameState.timerInterval);
+            gameState.isGameActive = false;
+            shuffleBtn.textContent = '开始游戏';
+            initGame();
         }
         
         // 设置难度
         function setDifficulty(difficulty) {
-            currentDifficulty = difficulty;
+            gameState.currentDifficulty = difficulty;
             
             // 更新按钮样式
             difficultyButtons.forEach(btn => {
@@ -740,10 +722,42 @@
                     btn.classList.remove('active');
                 }
             });
+        }
+        
+        // 键盘控制
+        function handleKeyDown(e) {
+            if (!gameState.isGameActive) return;
             
-            // 如果游戏已开始，重新打乱
-            if (isGameActive) {
-                shuffleBoard();
+            let tileToMove = -1;
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (gameState.emptyIndex < 12) {
+                        tileToMove = gameState.emptyIndex + 4;
+                    }
+                    break;
+                case 'ArrowDown':
+                    if (gameState.emptyIndex > 3) {
+                        tileToMove = gameState.emptyIndex - 4;
+                    }
+                    break;
+                case 'ArrowLeft':
+                    if (gameState.emptyIndex % 4 < 3) {
+                        tileToMove = gameState.emptyIndex + 1;
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (gameState.emptyIndex % 4 > 0) {
+                        tileToMove = gameState.emptyIndex - 1;
+                    }
+                    break;
+                default:
+                    return;
+            }
+            
+            if (tileToMove !== -1) {
+                moveTile(tileToMove);
+                e.preventDefault(); // 防止页面滚动
             }
         }
         
@@ -758,44 +772,42 @@
         
         // 难度按钮事件
         difficultyButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                setDifficulty(btn.dataset.difficulty);
+            btn.addEventListener('click', function() {
+                setDifficulty(this.dataset.difficulty);
+                // 如果游戏已开始，重新打乱
+                if (gameState.isGameActive) {
+                    shuffleBoard();
+                }
             });
         });
         
-        // 初始化游戏
-        initBoard();
+        // 键盘事件
+        document.addEventListener('keydown', handleKeyDown);
         
-        // 键盘控制支持
-        document.addEventListener('keydown', (e) => {
-            if (!isGameActive) return;
+        // 初始化游戏
+        initGame();
+        
+        // 浏览器兼容性检查
+        function checkCompatibility() {
+            const issues = [];
             
-            let targetRow = emptyRow;
-            let targetCol = emptyCol;
-            
-            switch(e.key) {
-                case 'ArrowUp':
-                    if (emptyRow < 3) targetRow = emptyRow + 1;
-                    break;
-                case 'ArrowDown':
-                    if (emptyRow > 0) targetRow = emptyRow - 1;
-                    break;
-                case 'ArrowLeft':
-                    if (emptyCol < 3) targetCol = emptyCol + 1;
-                    break;
-                case 'ArrowRight':
-                    if (emptyCol > 0) targetCol = emptyCol - 1;
-                    break;
-                default:
-                    return;
+            // 检查关键API支持
+            if (!document.addEventListener) {
+                issues.push("您的浏览器不支持现代事件监听API");
             }
             
-            // 如果目标位置有效，移动方块
-            if ((targetRow !== emptyRow || targetCol !== emptyCol) && 
-                targetRow >= 0 && targetRow < 4 && targetCol >= 0 && targetCol < 4) {
-                moveTile(targetRow, targetCol);
+            if (!Array.from) {
+                issues.push("您的浏览器不支持Array.from方法");
             }
-        });
+            
+            if (issues.length > 0) {
+                console.warn("兼容性问题:", issues);
+                alert("您的浏览器可能不完全支持此游戏的所有功能，请考虑更新到最新版本的Chrome、Firefox、Edge或Safari浏览器。");
+            }
+        }
+        
+        // 页面加载完成后运行兼容性检查
+        window.addEventListener('load', checkCompatibility);
     </script>
 </body>
 </html>
