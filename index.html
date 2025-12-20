@@ -440,58 +440,68 @@
             font-size: 0.9rem;
         }
         
-        .touch-controls {
+        .mobile-image-selector {
             display: none;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 5px;
-            margin-top: 15px;
-            max-width: 200px;
-            margin-left: auto;
-            margin-right: auto;
         }
         
-        .touch-btn {
-            background: rgba(0, 173, 181, 0.2);
-            border: 1px solid rgba(0, 173, 181, 0.3);
-            border-radius: 8px;
-            color: white;
-            font-size: 1.5rem;
-            padding: 10px;
-            cursor: pointer;
-            touch-action: manipulation;
-            user-select: none;
+        .desktop-image-selector {
+            display: block;
         }
         
-        .touch-btn.up {
-            grid-column: 2;
-            grid-row: 1;
+        /* 桌面端布局（768px以上） */
+        @media (min-width: 769px) {
+            .mobile-image-selector {
+                display: none !important;
+            }
+            .desktop-image-selector {
+                display: block;
+            }
         }
         
-        .touch-btn.down {
-            grid-column: 2;
-            grid-row: 2;
-        }
-        
-        .touch-btn.left {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        
-        .touch-btn.right {
-            grid-column: 3;
-            grid-row: 2;
-        }
-        
+        /* 移动端布局（768px以下） */
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
                 border-radius: 15px;
             }
             
+            /* 移动端布局调整 */
             .main-content {
                 flex-direction: column;
                 gap: 20px;
+            }
+            
+            /* 隐藏桌面端图片选择器，显示移动端图片选择器 */
+            .mobile-image-selector {
+                display: block;
+                order: 1;
+                background-color: rgba(40, 40, 60, 0.7);
+                border-radius: 15px;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .desktop-image-selector {
+                display: none;
+            }
+            
+            /* 游戏部分调整 */
+            .game-section {
+                order: 2;
+                min-width: 100%;
+            }
+            
+            /* 控制部分调整 */
+            .control-section {
+                order: 3;
+                min-width: 100%;
+                padding: 15px;
+            }
+            
+            /* 预览容器调整 */
+            .preview-container {
+                margin-top: 10px;
+                margin-bottom: 20px;
             }
             
             .controls {
@@ -502,12 +512,9 @@
                 min-width: 100%;
             }
             
-            .touch-controls {
-                display: grid;
-            }
-            
             .mobile-notice {
                 display: block;
+                order: 0;
             }
             
             .image-buttons {
@@ -540,6 +547,11 @@
             .stat-value {
                 font-size: 1.3rem;
             }
+            
+            /* 调整难度选择按钮在移动端的显示 */
+            .difficulty-buttons {
+                flex-direction: column;
+            }
         }
         
         @media (max-width: 480px) {
@@ -553,6 +565,10 @@
             }
             
             .control-section {
+                padding: 15px;
+            }
+            
+            .mobile-image-selector {
                 padding: 15px;
             }
             
@@ -598,7 +614,17 @@
         </header>
         
         <div class="mobile-notice">
-            提示：点击与空白相邻的方块可以移动，也可以使用下方方向键控制
+            提示：点击与空白相邻的方块可以移动
+        </div>
+        
+        <!-- 移动端图片选择器 -->
+        <div class="mobile-image-selector" id="mobile-image-selector">
+            <div class="image-selector">
+                <h3>选择图片</h3>
+                <div class="image-buttons" id="mobile-image-buttons">
+                    <!-- 图片按钮将通过JavaScript动态生成 -->
+                </div>
+            </div>
         </div>
         
         <div class="loading" id="loading">
@@ -620,13 +646,6 @@
                     <!-- 游戏方块将通过JavaScript动态生成 -->
                 </div>
                 
-                <div class="touch-controls" id="touch-controls">
-                    <button class="touch-btn up" data-direction="up">↑</button>
-                    <button class="touch-btn down" data-direction="down">↓</button>
-                    <button class="touch-btn left" data-direction="left">←</button>
-                    <button class="touch-btn right" data-direction="right">→</button>
-                </div>
-                
                 <div class="stats">
                     <div class="stat-box">
                         <div class="stat-label">移动步数</div>
@@ -640,10 +659,13 @@
             </div>
             
             <div class="control-section">
-                <div class="image-selector">
-                    <h3>选择图片</h3>
-                    <div class="image-buttons" id="image-buttons">
-                        <!-- 图片按钮将通过JavaScript动态生成 -->
+                <!-- 桌面端图片选择器 -->
+                <div class="desktop-image-selector" id="desktop-image-selector">
+                    <div class="image-selector">
+                        <h3>选择图片</h3>
+                        <div class="image-buttons" id="desktop-image-buttons">
+                            <!-- 图片按钮将通过JavaScript动态生成 -->
+                        </div>
                     </div>
                 </div>
                 
@@ -775,7 +797,8 @@
         const hintBtn = document.getElementById('hint-btn');
         const resetBtn = document.getElementById('reset-btn');
         const difficultyButtons = document.querySelectorAll('.diff-btn');
-        const imageButtonsContainer = document.getElementById('image-buttons');
+        const desktopImageButtonsContainer = document.getElementById('desktop-image-buttons');
+        const mobileImageButtonsContainer = document.getElementById('mobile-image-buttons');
         const previewImageElement = document.getElementById('preview-image');
         const winMessage = document.getElementById('win-message');
         const winMovesElement = document.getElementById('win-moves');
@@ -784,8 +807,6 @@
         const playAgainBtn = document.getElementById('play-again-btn');
         const loadingElement = document.getElementById('loading');
         const errorElement = document.getElementById('error-message');
-        const touchControls = document.getElementById('touch-controls');
-        const touchButtons = document.querySelectorAll('.touch-btn');
         
         // 设备检测
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -1432,8 +1453,19 @@
         
         // 设置活动图片按钮
         function setActiveImageButton(index) {
-            const imageButtons = document.querySelectorAll('.image-btn');
-            imageButtons.forEach((btn, i) => {
+            // 同时设置桌面端和移动端的图片按钮状态
+            const desktopImageButtons = document.querySelectorAll('#desktop-image-buttons .image-btn');
+            const mobileImageButtons = document.querySelectorAll('#mobile-image-buttons .image-btn');
+            
+            desktopImageButtons.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            mobileImageButtons.forEach((btn, i) => {
                 if (i === index) {
                     btn.classList.add('active');
                 } else {
@@ -1444,12 +1476,13 @@
         
         // 初始化图片选择器
         async function initImageSelector() {
-            imageButtonsContainer.innerHTML = '';
+            desktopImageButtonsContainer.innerHTML = '';
+            mobileImageButtonsContainer.innerHTML = '';
             
             const availableImages = await testImageAvailability();
             
-            // 创建所有按钮（并行处理）
-            const buttonPromises = availableImages.map(async (imageInfo, index) => {
+            // 为桌面端和移动端创建相同的图片选择器
+            const createImageButton = (imageInfo, index, container) => {
                 const button = document.createElement('button');
                 button.className = 'image-btn';
                 if (index === 0) button.classList.add('active');
@@ -1491,13 +1524,13 @@
                     }, { passive: false });
                 }
                 
-                return button;
-            });
+                container.appendChild(button);
+            };
             
-            // 并行创建所有按钮并添加到容器
-            const buttons = await Promise.all(buttonPromises);
-            buttons.forEach(button => {
-                imageButtonsContainer.appendChild(button);
+            // 为桌面端和移动端创建按钮
+            availableImages.forEach((imageInfo, index) => {
+                createImageButton(imageInfo, index, desktopImageButtonsContainer);
+                createImageButton(imageInfo, index, mobileImageButtonsContainer);
             });
             
             // 预加载第一张图片的完整版
@@ -1550,7 +1583,6 @@
             // 显示移动端提示
             if (isMobile || isTouchDevice) {
                 document.querySelector('.mobile-notice').style.display = 'block';
-                touchControls.style.display = 'grid';
             }
             
             // 初始化图片选择器
@@ -1612,20 +1644,6 @@
                     shuffleBoard();
                 }
             });
-        });
-        
-        // 触摸按钮事件
-        touchButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                moveByDirection(this.dataset.direction);
-            });
-            
-            if (isTouchDevice) {
-                btn.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    moveByDirection(this.dataset.direction);
-                }, { passive: false });
-            }
         });
         
         // 键盘事件
