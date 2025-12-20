@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,7 +15,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
-        
+
         body {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #f0f0f0;
@@ -26,7 +27,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        
+
         .container {
             width: 100%;
             max-width: 900px;
@@ -37,14 +38,14 @@
             padding: 25px;
             touch-action: manipulation;
         }
-        
+
         header {
             text-align: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid #00adb5;
         }
-        
+
         h1 {
             color: #00adb5;
             font-size: clamp(1.8rem, 4vw, 2.5rem);
@@ -52,24 +53,24 @@
             letter-spacing: 0.5px;
             font-weight: 600;
         }
-        
+
         .subtitle {
             color: #eeeeee;
             font-size: clamp(0.85rem, 2vw, 1rem);
             opacity: 0.8;
         }
-        
+
         .main-content {
             display: flex;
             flex-wrap: wrap;
             gap: 25px;
         }
-        
+
         .game-section {
             flex: 1;
             min-width: 300px;
         }
-        
+
         .control-section {
             flex: 1;
             min-width: 300px;
@@ -77,7 +78,7 @@
             border-radius: 15px;
             padding: 20px;
         }
-        
+
         /* 3x3游戏板 */
         .game-board {
             display: grid;
@@ -95,7 +96,7 @@
             touch-action: none;
             user-select: none;
         }
-        
+
         .tile {
             background-size: cover;
             background-position: center;
@@ -112,7 +113,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
         }
-        
+
         .tile-number {
             position: absolute;
             top: 5px;
@@ -124,23 +125,23 @@
             border-radius: 3px;
             pointer-events: none;
         }
-        
+
         .tile:hover {
             transform: scale(1.03);
             opacity: 0.9;
         }
-        
+
         .tile:active {
             transform: scale(0.98);
         }
-        
+
         .empty {
             background: rgba(15, 52, 96, 0.5);
             cursor: default;
             position: relative;
             pointer-events: none;
         }
-        
+
         .empty::after {
             content: "空白";
             position: absolute;
@@ -150,7 +151,7 @@
             color: rgba(255, 255, 255, 0.3);
             font-size: 0.8rem;
         }
-        
+
         .stats {
             display: flex;
             justify-content: space-around;
@@ -158,7 +159,7 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        
+
         .stat-box {
             background: linear-gradient(145deg, #393e46, #222831);
             padding: 12px;
@@ -167,26 +168,26 @@
             min-width: 120px;
             flex: 1;
         }
-        
+
         .stat-value {
             font-size: 1.5rem;
             font-weight: bold;
             color: #00adb5;
             margin-top: 5px;
         }
-        
+
         .stat-label {
             font-size: 0.85rem;
             color: #bbbbbb;
         }
-        
+
         .controls {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 20px;
         }
-        
+
         .btn {
             flex: 1;
             min-width: 110px;
@@ -201,46 +202,46 @@
             -webkit-appearance: none;
             appearance: none;
         }
-        
+
         .btn-primary {
             background: linear-gradient(to right, #00adb5, #00979f);
             color: white;
         }
-        
+
         .btn-secondary {
             background: linear-gradient(to right, #393e46, #2d3239);
             color: white;
         }
-        
+
         .btn-success {
             background: linear-gradient(to right, #00b894, #00a085);
             color: white;
         }
-        
+
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
         }
-        
+
         .btn:active {
             transform: translateY(-1px);
         }
-        
+
         .difficulty {
             margin-bottom: 20px;
         }
-        
+
         .difficulty h3 {
             margin-bottom: 10px;
             color: #eeeeee;
             font-size: 1.1rem;
         }
-        
+
         .difficulty-buttons {
             display: flex;
             gap: 8px;
         }
-        
+
         .diff-btn {
             flex: 1;
             padding: 10px 8px;
@@ -253,22 +254,22 @@
             font-size: 0.9rem;
             touch-action: manipulation;
         }
-        
+
         .diff-btn.active {
             background-color: #00adb5;
             color: white;
         }
-        
+
         .image-selector {
             margin-bottom: 20px;
         }
-        
+
         .image-selector h3 {
             margin-bottom: 10px;
             color: #eeeeee;
             font-size: 1.1rem;
         }
-        
+
         .select-image-btn {
             width: 100%;
             padding: 12px;
@@ -285,13 +286,13 @@
             justify-content: center;
             gap: 8px;
         }
-        
+
         .select-image-btn:hover {
             background: linear-gradient(to right, #00979f, #00838a);
             transform: translateY(-3px);
             box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
         }
-        
+
         .instructions {
             background-color: rgba(40, 40, 60, 0.7);
             border-radius: 15px;
@@ -299,20 +300,20 @@
             margin-top: 20px;
             border-left: 5px solid #00adb5;
         }
-        
+
         .instructions h3 {
             color: #00adb5;
             margin-bottom: 8px;
             font-size: 1.1rem;
         }
-        
+
         .instructions p {
             line-height: 1.5;
             margin-bottom: 8px;
             color: #cccccc;
             font-size: 0.9rem;
         }
-        
+
         .win-message {
             position: fixed;
             top: 0;
@@ -329,12 +330,12 @@
             transition: opacity 0.5s ease;
             padding: 20px;
         }
-        
+
         .win-message.show {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .win-content {
             background: linear-gradient(145deg, #1a1a2e, #16213e);
             padding: 25px;
@@ -344,28 +345,28 @@
             width: 100%;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
-        
+
         .win-content h2 {
             color: #00ff88;
             font-size: clamp(1.8rem, 4vw, 2.2rem);
             margin-bottom: 15px;
         }
-        
+
         .win-stats {
             font-size: 1rem;
             margin-bottom: 20px;
             color: #eeeeee;
         }
-        
+
         .win-stats p {
             margin-bottom: 10px;
         }
-        
+
         .win-stats span {
             color: #00adb5;
             font-weight: bold;
         }
-        
+
         .mobile-notice {
             display: none;
             background-color: rgba(0, 173, 181, 0.1);
@@ -377,7 +378,7 @@
             color: #bbbbbb;
             text-align: center;
         }
-        
+
         .preview-image {
             width: 100%;
             max-width: 180px;
@@ -387,7 +388,7 @@
             background: linear-gradient(45deg, #2d3239 25%, #393e46 25%, #393e46 50%, #2d3239 50%, #2d3239 75%, #393e46 75%);
             background-size: 20px 20px;
         }
-        
+
         .preview-container {
             text-align: center;
             margin-bottom: 15px;
@@ -395,7 +396,7 @@
             background: rgba(40, 40, 60, 0.5);
             border-radius: 8px;
         }
-        
+
         .loading {
             display: none;
             text-align: center;
@@ -403,7 +404,7 @@
             color: #00adb5;
             font-size: 0.9rem;
         }
-        
+
         .error-message {
             display: none;
             background-color: rgba(255, 87, 87, 0.1);
@@ -415,7 +416,7 @@
             text-align: center;
             font-size: 0.9rem;
         }
-        
+
         /* 缩略图模态框 */
         .thumbnail-modal {
             position: fixed;
@@ -432,12 +433,12 @@
             visibility: hidden;
             transition: opacity 0.3s ease;
         }
-        
+
         .thumbnail-modal.show {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .thumbnail-modal-content {
             background: linear-gradient(145deg, #1a1a2e, #16213e);
             padding: 25px;
@@ -448,7 +449,7 @@
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
-        
+
         .thumbnail-modal-header {
             display: flex;
             justify-content: space-between;
@@ -457,12 +458,12 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #00adb5;
         }
-        
+
         .thumbnail-modal-header h2 {
             color: #00adb5;
             font-size: 1.5rem;
         }
-        
+
         .close-thumbnail-modal {
             background: none;
             border: none;
@@ -471,14 +472,14 @@
             cursor: pointer;
             padding: 5px;
         }
-        
+
         .thumbnail-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
-        
+
         .thumbnail-item {
             cursor: pointer;
             border-radius: 8px;
@@ -487,24 +488,24 @@
             border: 2px solid transparent;
             background-color: #2d3239;
         }
-        
+
         .thumbnail-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0, 173, 181, 0.3);
         }
-        
+
         .thumbnail-item.selected {
             border-color: #00adb5;
             box-shadow: 0 0 15px rgba(0, 173, 181, 0.5);
         }
-        
+
         .thumbnail-item img {
             width: 100%;
             height: 120px;
             object-fit: cover;
             display: block;
         }
-        
+
         .thumbnail-item-name {
             background-color: rgba(40, 40, 60, 0.9);
             padding: 8px;
@@ -512,208 +513,228 @@
             color: #eeeeee;
             font-size: 0.85rem;
         }
-        
+
         .thumbnail-modal-actions {
             display: flex;
             gap: 10px;
         }
-        
+
         .loading-thumbnails {
             text-align: center;
             padding: 20px;
             color: #00adb5;
             font-size: 1rem;
         }
-        
+
         .current-image-info {
             text-align: center;
             margin-top: 10px;
             font-size: 0.9rem;
             color: #bbbbbb;
         }
-        
+
         /* 桌面端布局（768px以上） */
         @media (min-width: 769px) {
             .thumbnail-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
         }
-        
+
         /* 移动端布局（768px以下） */
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
                 border-radius: 15px;
             }
-            
+
             /* 移动端布局调整 */
             .main-content {
                 flex-direction: column;
                 gap: 20px;
             }
-            
+
             /* 游戏部分调整 */
             .game-section {
                 order: 2;
                 min-width: 100%;
             }
-            
+
             /* 控制部分调整 */
             .control-section {
                 order: 3;
                 min-width: 100%;
                 padding: 15px;
             }
-            
+
             /* 预览容器调整 */
             .preview-container {
                 margin-top: 10px;
                 margin-bottom: 20px;
             }
-            
+
             .controls {
                 flex-direction: column;
             }
-            
+
             .btn {
                 min-width: 100%;
             }
-            
+
             .mobile-notice {
                 display: block;
                 order: 0;
             }
-            
+
             .game-board {
                 gap: 1px;
                 padding: 1px;
             }
-            
+
             .stat-box {
                 min-width: 100px;
                 padding: 10px;
             }
-            
+
             .stat-value {
                 font-size: 1.3rem;
             }
-            
+
             /* 调整难度选择按钮在移动端的显示 */
             .difficulty-buttons {
                 flex-direction: column;
             }
-            
+
             /* 缩略图模态框移动端适配 */
             .thumbnail-modal-content {
                 width: 95%;
                 padding: 20px;
             }
-            
+
             .thumbnail-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
-            
+
             .thumbnail-item img {
                 height: 100px;
             }
         }
-        
+
         @media (max-width: 480px) {
             body {
                 padding: 10px;
             }
-            
+
             .container {
                 padding: 15px;
                 border-radius: 12px;
             }
-            
+
             .control-section {
                 padding: 15px;
             }
-            
+
             .game-board {
                 gap: 1px;
                 padding: 1px;
             }
-            
+
             .tile-number {
                 font-size: 0.7rem;
                 padding: 1px 3px;
             }
-            
+
             .instructions {
                 padding: 15px;
             }
-            
+
             .win-content {
                 padding: 20px;
             }
-            
+
             .preview-image {
                 max-width: 150px;
             }
-            
+
             .thumbnail-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .thumbnail-item img {
                 height: 150px;
             }
         }
-        
+
         @media (hover: none) and (pointer: coarse) {
             .tile:hover {
                 transform: none;
             }
-            
+
             .btn:hover {
                 transform: none;
             }
-            
+
             .thumbnail-item:hover {
                 transform: none;
             }
-            
+
             .select-image-btn:hover {
                 transform: none;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>图片华容道游戏</h1>
             <p class="subtitle">移动方块，还原完整图片即获胜</p>
         </header>
-        
+
         <div class="mobile-notice">
             提示：点击与空白相邻的方块可以移动
         </div>
-        
+
         <div class="loading" id="loading">
             正在加载图片...
         </div>
-        
+
         <div class="error-message" id="error-message">
             无法加载图片，请检查图片文件是否存在
         </div>
-        
+
         <div class="main-content">
+            <!-- 图片选择器 - 只有一个按钮 -->
+            <div class="image-selector">
+                <h3>选择图片</h3>
+                <button class="select-image-btn" id="select-image-btn">
+                    选择寿星图片
+                </button>
+                <div class="current-image-info" id="current-image-info">
+                    当前未选择图片
+                </div>
+            </div>
+
+            <div class="difficulty">
+                <h3>游戏难度</h3>
+                <div class="difficulty-buttons">
+                    <button class="diff-btn active" data-difficulty="easy">简单 (20步)</button>
+                    <button class="diff-btn" data-difficulty="medium">中等 (50步)</button>
+                    <button class="diff-btn" data-difficulty="hard">困难 (100步)</button>
+                </div>
+            </div>
             <div class="game-section">
                 <div class="preview-container">
                     <img id="preview-image" class="preview-image" alt="当前图片预览" loading="lazy">
                     <div id="current-image-name">尚未选择图片</div>
                 </div>
-                
+
                 <!-- 3x3游戏板 -->
                 <div class="game-board" id="game-board">
                     <!-- 游戏方块将通过JavaScript动态生成 -->
                 </div>
-                
+
                 <div class="stats">
                     <div class="stat-box">
                         <div class="stat-label">移动步数</div>
@@ -725,19 +746,10 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="control-section">
-                <!-- 图片选择器 - 只有一个按钮 -->
-                <div class="image-selector">
-                    <h3>选择图片</h3>
-                    <button class="select-image-btn" id="select-image-btn">
-                        选择寿星图片
-                    </button>
-                    <div class="current-image-info" id="current-image-info">
-                        当前未选择图片
-                    </div>
-                </div>
-                
+
+
                 <div class="controls">
                     <button class="btn btn-primary" id="shuffle-btn">
                         开始游戏
@@ -749,16 +761,9 @@
                         重新开始
                     </button>
                 </div>
-                
-                <div class="difficulty">
-                    <h3>游戏难度</h3>
-                    <div class="difficulty-buttons">
-                        <button class="diff-btn active" data-difficulty="easy">简单 (20步)</button>
-                        <button class="diff-btn" data-difficulty="medium">中等 (50步)</button>
-                        <button class="diff-btn" data-difficulty="hard">困难 (100步)</button>
-                    </div>
-                </div>
-                
+
+
+
                 <div class="instructions">
                     <h3>游戏说明</h3>
                     <p>1. 点击与空白位置相邻的方块可以移动该方块</p>
@@ -769,7 +774,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="win-message" id="win-message">
         <div class="win-content">
             <h2>恭喜获胜!</h2>
@@ -783,7 +788,7 @@
             </button>
         </div>
     </div>
-    
+
     <!-- 缩略图模态框 -->
     <div class="thumbnail-modal" id="thumbnail-modal">
         <div class="thumbnail-modal-content">
@@ -832,7 +837,7 @@
             },
             imageFiles: [] // 动态获取的图片文件列表
         };
-        
+
         // DOM 元素
         const gameBoardElement = document.getElementById('game-board');
         const moveCountElement = document.getElementById('move-count');
@@ -852,7 +857,7 @@
         const selectImageBtn = document.getElementById('select-image-btn');
         const currentImageNameElement = document.getElementById('current-image-name');
         const currentImageInfoElement = document.getElementById('current-image-info');
-        
+
         // 缩略图模态框相关元素
         const thumbnailModal = document.getElementById('thumbnail-modal');
         const thumbnailGrid = document.getElementById('thumbnail-grid');
@@ -860,20 +865,20 @@
         const closeThumbnailModalBtn = document.getElementById('close-thumbnail-modal');
         const confirmThumbnailBtn = document.getElementById('confirm-thumbnail-btn');
         const cancelThumbnailBtn = document.getElementById('cancel-thumbnail-btn');
-        
+
         // 设备检测
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        
+
         // 获取images文件夹中的图片文件
         async function getImageFiles() {
             // 这里我们假设images文件夹中有图片文件
             // 在实际项目中，您可能需要通过服务器端API获取文件列表
             // 这里我们使用一个预设的图片列表，或者可以通过尝试加载的方式来发现图片
-            
+
             const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
             const imageFiles = [];
-            
+
             // 尝试加载预设的图片文件
             for (let i = 1; i <= 8; i++) {
                 imageFiles.push({
@@ -882,16 +887,16 @@
                     thumbnailPath: `images/thumbnails/${i}.jpg` // 假设有缩略图
                 });
             }
-            
+
             return imageFiles;
         }
-        
+
         // 初始化游戏
         async function initGame() {
             // 3x3游戏板：9个位置，其中8个有图片，1个空白
-            gameState.board = Array.from({length: 9}, (_, i) => i < 8 ? i : null);
+            gameState.board = Array.from({ length: 9 }, (_, i) => i < 8 ? i : null);
             gameState.emptyIndex = 8;
-            
+
             // 如果没有设置当前图片，先使用颜色方块
             if (!gameState.currentImage) {
                 createColorTiles();
@@ -900,11 +905,11 @@
                 previewImageElement.src = '';
                 previewImageElement.style.display = 'none';
             }
-            
+
             renderBoard();
             resetGameStats();
         }
-        
+
         // 通用图片加载函数
         function loadImage(url) {
             return new Promise((resolve, reject) => {
@@ -912,52 +917,52 @@
                     reject(new Error('URL为空'));
                     return;
                 }
-                
+
                 const img = new Image();
                 img.crossOrigin = 'anonymous';
-                
+
                 // 设置超时
                 const timeout = setTimeout(() => {
                     img.onload = null;
                     img.onerror = null;
                     reject(new Error(`图片加载超时: ${url}`));
                 }, 15000); // 15秒超时
-                
+
                 img.onload = () => {
                     clearTimeout(timeout);
                     resolve(img);
                 };
-                
+
                 img.onerror = () => {
                     clearTimeout(timeout);
                     reject(new Error(`无法加载图片: ${url}`));
                 };
-                
+
                 img.src = url;
             });
         }
-        
+
         // 加载缩略图（用于模态框展示）
         async function loadThumbnails() {
             loadingThumbnailsElement.style.display = 'block';
             thumbnailGrid.innerHTML = '';
-            
+
             try {
                 // 获取图片文件列表
                 gameState.imageFiles = await getImageFiles();
-                
+
                 if (gameState.imageFiles.length === 0) {
                     loadingThumbnailsElement.innerHTML = '未找到图片文件，请确保images文件夹中有图片文件';
                     return;
                 }
-                
+
                 // 加载所有缩略图
                 const thumbnailPromises = gameState.imageFiles.map(async (imageFile, index) => {
                     try {
                         // 尝试加载缩略图
                         const thumbnailImg = await loadImage(imageFile.thumbnailPath);
                         gameState.thumbnailCache.set(imageFile.path, thumbnailImg);
-                        
+
                         return {
                             index,
                             name: imageFile.name,
@@ -968,7 +973,7 @@
                         };
                     } catch (thumbnailError) {
                         console.warn(`缩略图加载失败: ${imageFile.name}`, thumbnailError);
-                        
+
                         // 缩略图失败，尝试使用原图作为缩略图
                         try {
                             const originalImg = await loadImage(imageFile.path);
@@ -977,21 +982,21 @@
                             thumbnailCanvas.width = 200;
                             thumbnailCanvas.height = 200;
                             const ctx = thumbnailCanvas.getContext('2d');
-                            
+
                             // 计算缩放比例
                             const scale = Math.min(200 / originalImg.width, 200 / originalImg.height);
                             const width = originalImg.width * scale;
                             const height = originalImg.height * scale;
                             const x = (200 - width) / 2;
                             const y = (200 - height) / 2;
-                            
+
                             ctx.drawImage(originalImg, x, y, width, height);
-                            
+
                             const thumbnailImg = new Image();
                             thumbnailImg.src = thumbnailCanvas.toDataURL();
-                            
+
                             gameState.thumbnailCache.set(imageFile.path, thumbnailImg);
-                            
+
                             return {
                                 index,
                                 name: imageFile.name,
@@ -1013,10 +1018,10 @@
                         }
                     }
                 });
-                
+
                 // 等待所有缩略图加载完成
                 const results = await Promise.allSettled(thumbnailPromises);
-                
+
                 // 处理结果
                 const availableThumbnails = results.map(result => {
                     if (result.status === 'fulfilled') {
@@ -1026,7 +1031,7 @@
                         return null;
                     }
                 }).filter(img => img !== null);
-                
+
                 // 显示缩略图
                 availableThumbnails.forEach((thumbnailInfo, index) => {
                     const thumbnailItem = document.createElement('div');
@@ -1035,15 +1040,15 @@
                         thumbnailItem.classList.add('selected');
                         gameState.selectedThumbnailIndex = index;
                     }
-                    
+
                     thumbnailItem.dataset.index = index;
-                    
+
                     if (thumbnailInfo.isAvailable && thumbnailInfo.thumbnail) {
                         const img = document.createElement('img');
                         img.src = thumbnailInfo.thumbnail.src;
                         img.alt = thumbnailInfo.name;
                         img.loading = 'lazy';
-                        
+
                         thumbnailItem.appendChild(img);
                     } else {
                         const placeholder = document.createElement('div');
@@ -1056,115 +1061,121 @@
                         placeholder.textContent = '加载失败';
                         thumbnailItem.appendChild(placeholder);
                     }
-                    
+
                     const nameDiv = document.createElement('div');
                     nameDiv.className = 'thumbnail-item-name';
                     nameDiv.textContent = thumbnailInfo.name;
                     thumbnailItem.appendChild(nameDiv);
-                    
+
                     thumbnailItem.addEventListener('click', () => {
                         // 移除之前选中的项
                         document.querySelectorAll('.thumbnail-item.selected').forEach(item => {
                             item.classList.remove('selected');
                         });
-                        
+
                         // 选中当前项
                         thumbnailItem.classList.add('selected');
                         gameState.selectedThumbnailIndex = index;
                     });
-                    
+
                     thumbnailGrid.appendChild(thumbnailItem);
                 });
-                
+
                 loadingThumbnailsElement.style.display = 'none';
-                
+
                 if (availableThumbnails.length === 0) {
                     loadingThumbnailsElement.style.display = 'block';
                     loadingThumbnailsElement.innerHTML = '没有可用的图片文件';
                 }
-                
+
             } catch (error) {
                 console.error('缩略图加载过程中出错:', error);
                 loadingThumbnailsElement.style.display = 'block';
                 loadingThumbnailsElement.innerHTML = '缩略图加载失败';
             }
         }
-        
+
         // 加载完整图片（用于游戏）
         async function loadFullImage(imagePath, imageName) {
             loadingElement.style.display = 'block';
             loadingElement.textContent = `正在加载图片: ${imageName}...`;
-            
+
             try {
                 // 检查缓存中是否已经有完整图片
                 if (gameState.imageCache.has(imagePath)) {
                     const cachedImg = gameState.imageCache.get(imagePath);
-                    
+
                     // 检查是否已经有切片缓存
                     if (gameState.tileCache.has(imagePath)) {
                         const cached = gameState.tileCache.get(imagePath);
                         gameState.tileImages = cached.tiles;
                         previewImageElement.src = cached.preview;
                         previewImageElement.style.display = 'block';
-                        
+
                         gameState.currentImage = imagePath;
                         gameState.currentImageName = imageName;
-                        
+
                         currentImageNameElement.textContent = imageName;
                         currentImageInfoElement.textContent = `当前图片: ${imageName}`;
-                        
+
                         loadingElement.style.display = 'none';
+                        // 用切片填充棋盘并重新渲染
+                        gameState.board = Array.from({ length: 9 }, (_, i) => i < 8 ? i : null);
+                        gameState.emptyIndex = 8;
+                        renderBoard();
                         return;
                     }
-                    
+
                     await createImageTiles(cachedImg, imagePath);
+                    // createImageTiles 会设置 gameState.tileImages 和预览，渲染棋盘
+                    gameState.board = Array.from({ length: 9 }, (_, i) => i < 8 ? i : null);
+                    gameState.emptyIndex = 8;
+                    renderBoard();
                     loadingElement.style.display = 'none';
                     return;
                 }
-                
+
                 // 加载本地图片
                 const img = await loadImage(imagePath);
-                
+
                 // 缓存完整图片
                 gameState.imageCache.set(imagePath, img);
                 gameState.currentImage = imagePath;
                 gameState.currentImageName = imageName;
-                
+
                 // 创建图片切片（3x3）
                 await createImageTiles(img, imagePath);
-                
+
                 // 更新UI
                 currentImageNameElement.textContent = imageName;
                 currentImageInfoElement.textContent = `当前图片: ${imageName}`;
-                
-                // 如果有游戏进行中，重置游戏
-                if (gameState.isGameActive) {
-                    gameState.board = Array.from({length: 9}, (_, i) => i < 8 ? i : null);
-                    gameState.emptyIndex = 8;
-                    gameState.moveCount = 0;
-                    moveCountElement.textContent = gameState.moveCount;
-                    renderBoard();
-                }
-                
+
+                // 将切片填充到棋盘并渲染（无论是否处于游戏中，都用新图片切片更新显示）
+                gameState.board = Array.from({ length: 9 }, (_, i) => i < 8 ? i : null);
+                gameState.emptyIndex = 8;
+                gameState.moveCount = 0;
+                moveCountElement.textContent = gameState.moveCount;
+                renderBoard();
+
             } catch (error) {
                 console.error('图片加载失败:', error);
                 errorElement.style.display = 'block';
                 errorElement.textContent = `图片加载失败: ${imageName}`;
-                
+
                 setTimeout(() => {
                     errorElement.style.display = 'none';
                 }, 3000);
-                
+
                 // 使用颜色方块作为替代
                 createColorTiles();
                 currentImageNameElement.textContent = '图片加载失败';
                 currentImageInfoElement.textContent = '使用默认颜色方块';
-                
+
             } finally {
                 loadingElement.style.display = 'none';
             }
         }
-        
+
         // 创建颜色方块（备用）- 3x3版本
         function createColorTiles() {
             const colors = [
@@ -1172,17 +1183,17 @@
                 '#06D6A0', '#118AB2', '#073B4C',
                 '#EF476F', '#7209B7', 'transparent'
             ];
-            
+
             gameState.tileImages = colors;
             previewImageElement.style.display = 'block';
-            
+
             // 创建预览图（颜色拼图）- 3x3
             const canvas = document.createElement('canvas');
             canvas.width = 300;
             canvas.height = 300;
             const ctx = canvas.getContext('2d');
             const tileSize = 100;
-            
+
             for (let row = 0; row < 3; row++) {
                 for (let col = 0; col < 3; col++) {
                     const index = row * 3 + col;
@@ -1192,15 +1203,15 @@
                     }
                 }
             }
-            
+
             previewImageElement.src = canvas.toDataURL();
             gameState.currentImage = null;
             gameState.currentImageName = '颜色方块';
-            
+
             currentImageNameElement.textContent = '颜色方块';
             currentImageInfoElement.textContent = '图片加载失败，使用颜色方块';
         }
-        
+
         // 创建图片切片并缓存 - 3x3版本
         async function createImageTiles(imageElement, imagePath) {
             return new Promise((resolve) => {
@@ -1213,15 +1224,15 @@
                     resolve();
                     return;
                 }
-                
+
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 const size = Math.min(imageElement.width, imageElement.height);
-                
+
                 // 3x3，每个切片100px，总共300px
                 canvas.width = 300;
                 canvas.height = 300;
-                
+
                 // 裁剪图片为正方形
                 ctx.drawImage(
                     imageElement,
@@ -1231,14 +1242,14 @@
                     0, 0,
                     300, 300
                 );
-                
+
                 // 保存预览图
                 const previewDataUrl = canvas.toDataURL();
-                
+
                 // 创建图片切片 - 3x3
                 const tileSize = 100;
                 const tiles = [];
-                
+
                 for (let row = 0; row < 3; row++) {
                     for (let col = 0; col < 3; col++) {
                         if (row === 2 && col === 2) {
@@ -1246,48 +1257,48 @@
                             tiles.push(null);
                             continue;
                         }
-                        
+
                         const tileCanvas = document.createElement('canvas');
                         tileCanvas.width = tileSize;
                         tileCanvas.height = tileSize;
                         const tileCtx = tileCanvas.getContext('2d');
-                        
+
                         tileCtx.drawImage(
                             canvas,
                             col * tileSize, row * tileSize, tileSize, tileSize,
                             0, 0, tileSize, tileSize
                         );
-                        
+
                         tiles.push(tileCanvas.toDataURL());
                     }
                 }
-                
+
                 // 缓存结果
                 gameState.tileImages = tiles;
                 gameState.tileCache.set(imagePath, {
                     tiles: tiles,
                     preview: previewDataUrl
                 });
-                
+
                 // 设置预览图
                 previewImageElement.src = previewDataUrl;
                 previewImageElement.style.display = 'block';
                 resolve();
             });
         }
-        
+
         // 渲染游戏板 - 3x3版本
         function renderBoard() {
             gameBoardElement.innerHTML = '';
-            
+
             gameState.board.forEach((value, index) => {
                 const tile = document.createElement('div');
                 tile.className = value === null ? 'tile empty' : 'tile';
-                
+
                 if (value !== null) {
                     tile.dataset.value = value;
                     tile.dataset.index = index;
-                    
+
                     // 设置背景图片或颜色
                     if (typeof gameState.tileImages[value] === 'string') {
                         tile.style.backgroundImage = `url(${gameState.tileImages[value]})`;
@@ -1295,16 +1306,16 @@
                     } else if (gameState.tileImages[value]) {
                         tile.style.backgroundColor = gameState.tileImages[value];
                     }
-                    
+
                     // 添加数字标签
                     const numberSpan = document.createElement('span');
                     numberSpan.className = 'tile-number';
                     numberSpan.textContent = value + 1;
                     tile.appendChild(numberSpan);
-                    
+
                     // 添加点击事件
                     tile.addEventListener('click', () => handleTileClick(index));
-                    
+
                     // 添加触摸事件
                     if (isTouchDevice) {
                         tile.addEventListener('touchstart', (e) => {
@@ -1315,46 +1326,46 @@
                 } else {
                     tile.dataset.index = index;
                 }
-                
+
                 gameBoardElement.appendChild(tile);
             });
         }
-        
+
         // 处理方块点击 - 3x3版本
         function handleTileClick(clickedIndex) {
             if (!gameState.isGameActive || gameState.board[clickedIndex] === null) {
                 return;
             }
-            
+
             if (isAdjacentToEmpty(clickedIndex)) {
                 moveTile(clickedIndex);
             }
         }
-        
+
         // 检查方块是否与空白位置相邻 - 3x3版本
         function isAdjacentToEmpty(index) {
             const emptyRow = Math.floor(gameState.emptyIndex / 3);
             const emptyCol = gameState.emptyIndex % 3;
             const tileRow = Math.floor(index / 3);
             const tileCol = index % 3;
-            
+
             return (tileRow === emptyRow && Math.abs(tileCol - emptyCol) === 1) ||
-                   (tileCol === emptyCol && Math.abs(tileRow - emptyRow) === 1);
+                (tileCol === emptyCol && Math.abs(tileRow - emptyRow) === 1);
         }
-        
+
         // 移动方块
         function moveTile(fromIndex) {
-            [gameState.board[gameState.emptyIndex], gameState.board[fromIndex]] = 
-            [gameState.board[fromIndex], gameState.board[gameState.emptyIndex]];
-            
+            [gameState.board[gameState.emptyIndex], gameState.board[fromIndex]] =
+                [gameState.board[fromIndex], gameState.board[gameState.emptyIndex]];
+
             gameState.emptyIndex = fromIndex;
             gameState.moveCount++;
             moveCountElement.textContent = gameState.moveCount;
-            
+
             renderBoard();
             checkWin();
         }
-        
+
         // 打乱游戏板 - 3x3版本
         async function shuffleBoard() {
             if (!gameState.currentImage) {
@@ -1365,54 +1376,54 @@
                 }, 2000);
                 return;
             }
-            
+
             if (!gameState.isGameActive) {
                 await startGame();
             }
-            
+
             const shuffleSteps = gameState.difficultySteps[gameState.currentDifficulty];
             let currentEmptyIndex = gameState.emptyIndex;
-            
+
             for (let i = 0; i < shuffleSteps; i++) {
                 const movableTiles = [];
-                
+
                 // 3x3版本的相邻位置计算
                 if (currentEmptyIndex > 2) movableTiles.push(currentEmptyIndex - 3); // 上
                 if (currentEmptyIndex < 6) movableTiles.push(currentEmptyIndex + 3); // 下
                 if (currentEmptyIndex % 3 > 0) movableTiles.push(currentEmptyIndex - 1); // 左
                 if (currentEmptyIndex % 3 < 2) movableTiles.push(currentEmptyIndex + 1); // 右
-                
+
                 const randomIndex = Math.floor(Math.random() * movableTiles.length);
                 const tileToMove = movableTiles[randomIndex];
-                
-                [gameState.board[currentEmptyIndex], gameState.board[tileToMove]] = 
-                [gameState.board[tileToMove], gameState.board[currentEmptyIndex]];
-                
+
+                [gameState.board[currentEmptyIndex], gameState.board[tileToMove]] =
+                    [gameState.board[tileToMove], gameState.board[currentEmptyIndex]];
+
                 currentEmptyIndex = tileToMove;
             }
-            
+
             gameState.emptyIndex = currentEmptyIndex;
             gameState.moveCount = 0;
             moveCountElement.textContent = gameState.moveCount;
             renderBoard();
         }
-        
+
         // 开始游戏
         async function startGame() {
             if (gameState.isGameActive) return;
-            
+
             gameState.isGameActive = true;
             resetGameStats();
-            
+
             clearInterval(gameState.timerInterval);
             gameState.timerInterval = setInterval(() => {
                 gameState.gameTime++;
                 updateTimer();
             }, 1000);
-            
+
             shuffleBtn.textContent = '重新打乱';
         }
-        
+
         // 重置游戏统计
         function resetGameStats() {
             gameState.moveCount = 0;
@@ -1420,14 +1431,14 @@
             moveCountElement.textContent = gameState.moveCount;
             updateTimer();
         }
-        
+
         // 更新计时器显示
         function updateTimer() {
             const minutes = Math.floor(gameState.gameTime / 60).toString().padStart(2, '0');
             const seconds = (gameState.gameTime % 60).toString().padStart(2, '0');
             timerElement.textContent = `${minutes}:${seconds}`;
         }
-        
+
         // 检查是否获胜 - 3x3版本
         function checkWin() {
             for (let i = 0; i < 8; i++) { // 3x3中，前8个位置应该有0-7
@@ -1435,52 +1446,52 @@
                     return false;
                 }
             }
-            
+
             if (gameState.board[8] !== null) { // 第9个位置应该是空白
                 return false;
             }
-            
+
             gameState.isGameActive = false;
             clearInterval(gameState.timerInterval);
-            
+
             winMovesElement.textContent = gameState.moveCount;
             winTimeElement.textContent = timerElement.textContent;
-            
+
             let difficultyText = '简单';
             if (gameState.currentDifficulty === 'medium') difficultyText = '中等';
             else if (gameState.currentDifficulty === 'hard') difficultyText = '困难';
-            
+
             winDifficultyElement.textContent = difficultyText;
-            
+
             setTimeout(() => {
                 winMessage.classList.add('show');
             }, 500);
         }
-        
+
         // 显示提示 - 3x3版本
         function showHint() {
             if (!gameState.isGameActive) return;
-            
+
             const tiles = document.querySelectorAll('.tile:not(.empty)');
             tiles.forEach(tile => {
                 tile.style.boxShadow = '';
             });
-            
+
             const movableTiles = [];
-            
+
             // 3x3版本的相邻位置计算
             if (gameState.emptyIndex > 2) movableTiles.push(gameState.emptyIndex - 3); // 上
             if (gameState.emptyIndex < 6) movableTiles.push(gameState.emptyIndex + 3); // 下
             if (gameState.emptyIndex % 3 > 0) movableTiles.push(gameState.emptyIndex - 1); // 左
             if (gameState.emptyIndex % 3 < 2) movableTiles.push(gameState.emptyIndex + 1); // 右
-            
+
             movableTiles.forEach(index => {
                 const tile = document.querySelector(`.tile[data-index="${index}"]`);
                 if (tile) {
                     tile.style.boxShadow = '0 0 15px #ffdd00';
                 }
             });
-            
+
             setTimeout(() => {
                 movableTiles.forEach(index => {
                     const tile = document.querySelector(`.tile[data-index="${index}"]`);
@@ -1490,7 +1501,7 @@
                 });
             }, 3000);
         }
-        
+
         // 重置游戏
         async function resetGame() {
             clearInterval(gameState.timerInterval);
@@ -1498,11 +1509,11 @@
             shuffleBtn.textContent = '开始游戏';
             await initGame();
         }
-        
+
         // 设置难度
         function setDifficulty(difficulty) {
             gameState.currentDifficulty = difficulty;
-            
+
             difficultyButtons.forEach(btn => {
                 if (btn.dataset.difficulty === difficulty) {
                     btn.classList.add('active');
@@ -1511,13 +1522,13 @@
                 }
             });
         }
-        
+
         // 打开缩略图选择模态框
         async function openThumbnailModal() {
             thumbnailModal.classList.add('show');
             await loadThumbnails();
         }
-        
+
         // 选择缩略图并加载原图
         async function selectThumbnail() {
             if (gameState.selectedThumbnailIndex === null) {
@@ -1528,48 +1539,48 @@
                 }, 2000);
                 return;
             }
-            
+
             const selectedImage = gameState.imageFiles[gameState.selectedThumbnailIndex];
             thumbnailModal.classList.remove('show');
-            
+
             // 加载原图
             await loadFullImage(selectedImage.path, selectedImage.name);
         }
-        
+
         // 初始化应用
         async function initApp() {
             // 显示移动端提示
             if (isMobile || isTouchDevice) {
                 document.querySelector('.mobile-notice').style.display = 'block';
             }
-            
+
             // 初始化游戏
             await initGame();
-            
+
             // 隐藏加载提示
             loadingElement.style.display = 'none';
         }
-        
+
         // 浏览器兼容性检查
         function checkCompatibility() {
             const issues = [];
-            
+
             if (typeof Promise === 'undefined') {
                 issues.push("您的浏览器不支持Promise，请升级浏览器");
             }
-            
+
             if (!document.addEventListener) {
                 issues.push("您的浏览器不支持现代事件监听API");
             }
-            
+
             if (!Array.from) {
                 issues.push("您的浏览器不支持Array.from方法");
             }
-            
+
             if (!HTMLCanvasElement) {
                 issues.push("您的浏览器不支持Canvas API");
             }
-            
+
             if (issues.length > 0) {
                 console.warn("兼容性问题:", issues);
                 const errorMsg = "您的浏览器可能不完全支持此游戏的所有功能，请考虑更新到最新版本的Chrome、Firefox、Edge或Safari浏览器。";
@@ -1577,7 +1588,7 @@
                 errorElement.textContent = errorMsg;
             }
         }
-        
+
         // 事件监听器
         shuffleBtn.addEventListener('click', shuffleBoard);
         hintBtn.addEventListener('click', showHint);
@@ -1586,63 +1597,63 @@
             winMessage.classList.remove('show');
             resetGame();
         });
-        
+
         // 难度按钮事件
         difficultyButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 setDifficulty(this.dataset.difficulty);
                 if (gameState.isGameActive) {
                     shuffleBoard();
                 }
             });
         });
-        
+
         // 图片选择按钮事件
         selectImageBtn.addEventListener('click', openThumbnailModal);
-        
+
         // 缩略图模态框事件
         closeThumbnailModalBtn.addEventListener('click', () => {
             thumbnailModal.classList.remove('show');
         });
-        
+
         cancelThumbnailBtn.addEventListener('click', () => {
             thumbnailModal.classList.remove('show');
         });
-        
+
         confirmThumbnailBtn.addEventListener('click', selectThumbnail);
-        
+
         // 点击模态框外部关闭
         thumbnailModal.addEventListener('click', (e) => {
             if (e.target === thumbnailModal) {
                 thumbnailModal.classList.remove('show');
             }
         });
-        
+
         // 防止移动端缩放
-        document.addEventListener('touchstart', function(e) {
+        document.addEventListener('touchstart', function (e) {
             if (e.touches.length > 1) {
                 e.preventDefault();
             }
         }, { passive: false });
-        
+
         // 防止双击缩放
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(e) {
+        document.addEventListener('touchend', function (e) {
             const now = Date.now();
             if (now - lastTouchEnd <= 300) {
                 e.preventDefault();
             }
             lastTouchEnd = now;
         }, false);
-        
+
         // 页面加载完成后初始化应用
         window.addEventListener('load', () => {
             checkCompatibility();
             initApp();
         });
-        
+
         // 处理页面可见性变化
-        document.addEventListener('visibilitychange', function() {
+        document.addEventListener('visibilitychange', function () {
             if (document.hidden && gameState.isGameActive) {
                 clearInterval(gameState.timerInterval);
             } else if (!document.hidden && gameState.isGameActive) {
@@ -1655,4 +1666,5 @@
         });
     </script>
 </body>
+
 </html>
