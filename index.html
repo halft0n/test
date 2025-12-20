@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>华容道游戏</title>
+    <title>图片华容道游戏</title>
     <style>
         * {
             margin: 0;
@@ -75,42 +75,62 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 1fr);
-            gap: 8px;
+            gap: 2px;
             background-color: #0f3460;
             border-radius: 10px;
-            padding: 10px;
+            padding: 2px;
             aspect-ratio: 1/1;
             max-width: 100%;
             margin: 0 auto 20px;
+            overflow: hidden;
+            position: relative;
         }
         
         .tile {
-            background: linear-gradient(145deg, #00adb5, #007d83);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: white;
+            background-size: 400% 400%;
+            border-radius: 4px;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, opacity 0.2s;
+            position: relative;
+            background-color: #0a2647;
+        }
+        
+        .tile-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 5px;
+            border-radius: 3px;
         }
         
         .tile:hover {
             transform: scale(1.03);
+            opacity: 0.9;
         }
         
         .empty {
-            background: transparent;
-            box-shadow: none;
+            background: rgba(15, 52, 96, 0.5);
             cursor: default;
+            position: relative;
         }
         
         .empty:hover {
             transform: none;
+            opacity: 1;
+        }
+        
+        .empty::after {
+            content: "空白";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
         }
         
         .stats {
@@ -211,6 +231,47 @@
             color: white;
         }
         
+        .image-selector {
+            margin-bottom: 25px;
+        }
+        
+        .image-selector h3 {
+            margin-bottom: 12px;
+            color: #eeeeee;
+        }
+        
+        .image-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .image-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px;
+            background-color: #393e46;
+            border: none;
+            border-radius: 8px;
+            color: #bbbbbb;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .image-btn.active {
+            background-color: #00adb5;
+            color: white;
+        }
+        
+        .image-btn img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
         .instructions {
             background-color: rgba(40, 40, 60, 0.7);
             border-radius: 15px;
@@ -290,6 +351,40 @@
             text-align: center;
         }
         
+        .preview-image {
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto 15px;
+            display: block;
+            border-radius: 8px;
+        }
+        
+        .preview-container {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(40, 40, 60, 0.5);
+            border-radius: 8px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            color: #00adb5;
+        }
+        
+        .error-message {
+            display: none;
+            background-color: rgba(255, 87, 87, 0.1);
+            border: 1px solid #ff5757;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            color: #ff8787;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -303,16 +398,16 @@
                 min-width: 100%;
             }
             
-            .tile {
-                font-size: 1.6rem;
-            }
-            
             h1 {
                 font-size: 2rem;
             }
             
             .mobile-notice {
                 display: block;
+            }
+            
+            .image-buttons {
+                flex-direction: column;
             }
         }
         
@@ -325,13 +420,9 @@
                 padding: 20px;
             }
             
-            .tile {
-                font-size: 1.4rem;
-            }
-            
             .game-board {
-                gap: 6px;
-                padding: 8px;
+                gap: 1px;
+                padding: 1px;
             }
             
             .stat-box {
@@ -348,16 +439,29 @@
 <body>
     <div class="container">
         <header>
-            <h1>华容道游戏</h1>
-            <p class="subtitle">移动方块，按数字顺序从1到15排列即获胜</p>
+            <h1>图片华容道游戏</h1>
+            <p class="subtitle">移动方块，还原完整图片即获胜</p>
         </header>
         
         <div class="mobile-notice">
             提示：您可以使用手指拖动方块，或点击与空白相邻的方块
         </div>
         
+        <div class="loading" id="loading">
+            正在加载图片...
+        </div>
+        
+        <div class="error-message" id="error-message">
+            无法加载图片，正在使用网络图片...
+        </div>
+        
         <div class="main-content">
             <div class="game-section">
+                <div class="preview-container">
+                    <img id="preview-image" class="preview-image" alt="当前图片预览">
+                    <div>当前拼图预览</div>
+                </div>
+                
                 <div class="game-board" id="game-board">
                     <!-- 游戏方块将通过JavaScript动态生成 -->
                 </div>
@@ -375,6 +479,13 @@
             </div>
             
             <div class="control-section">
+                <div class="image-selector">
+                    <h3>选择图片</h3>
+                    <div class="image-buttons" id="image-buttons">
+                        <!-- 图片按钮将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
                 <div class="controls">
                     <button class="btn btn-primary" id="shuffle-btn">
                         开始游戏
@@ -399,10 +510,10 @@
                 <div class="instructions">
                     <h3>游戏说明</h3>
                     <p>1. 点击与空白位置相邻的方块可以移动该方块</p>
-                    <p>2. 目标是将所有数字方块按顺序排列（从左到右，从上到下）</p>
+                    <p>2. 目标是将图片方块按正确顺序排列，还原完整图片</p>
                     <p>3. 使用"提示"按钮可以高亮显示可移动的方块</p>
                     <p>4. 不同的难度会影响初始打乱的步数</p>
-                    <p>5. 尽可能用最少的步数和时间完成游戏</p>
+                    <p>5. 可以从images文件夹中选择不同的图片</p>
                 </div>
             </div>
         </div>
@@ -432,12 +543,50 @@
             timerInterval: null,
             isGameActive: false,
             currentDifficulty: 'easy',
+            currentImage: '',
+            tileImages: [], // 存储每个方块的图片数据
             difficultySteps: {
                 easy: 20,
                 medium: 50,
                 hard: 100
             }
         };
+        
+        // 预设图片列表 - 首先尝试从本地images文件夹加载
+        const localImages = [
+            { name: '风景1', path: 'images/landscape1.jpg' },
+            { name: '风景2', path: 'images/landscape2.jpg' },
+            { name: '动物', path: 'images/animals.jpg' },
+            { name: '建筑', path: 'images/buildings.jpg' },
+            { name: '自然', path: 'images/nature.jpg' }
+        ];
+        
+        // 网络图片作为备选（使用Pexels的高质量免费图片）
+        const networkImages = [
+            { 
+                name: '山景', 
+                url: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            },
+            { 
+                name: '海滩', 
+                url: 'https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            },
+            { 
+                name: '森林', 
+                url: 'https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            },
+            { 
+                name: '城市', 
+                url: 'https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            },
+            { 
+                name: '星空', 
+                url: 'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            }
+        ];
+        
+        // 最终使用的图片列表
+        let imageList = [];
         
         // DOM 元素
         const gameBoardElement = document.getElementById('game-board');
@@ -447,21 +596,161 @@
         const hintBtn = document.getElementById('hint-btn');
         const resetBtn = document.getElementById('reset-btn');
         const difficultyButtons = document.querySelectorAll('.diff-btn');
+        const imageButtonsContainer = document.getElementById('image-buttons');
+        const previewImageElement = document.getElementById('preview-image');
         const winMessage = document.getElementById('win-message');
         const winMovesElement = document.getElementById('win-moves');
         const winTimeElement = document.getElementById('win-time');
         const winDifficultyElement = document.getElementById('win-difficulty');
         const playAgainBtn = document.getElementById('play-again-btn');
+        const loadingElement = document.getElementById('loading');
+        const errorElement = document.getElementById('error-message');
         
         // 初始化游戏
-        function initGame() {
-            // 创建初始数字数组 [1, 2, 3, ..., 15, null]
-            gameState.board = Array.from({length: 15}, (_, i) => i + 1);
-            gameState.board.push(null); // 空白位置
+        async function initGame() {
+            // 创建初始索引数组 [0, 1, 2, ..., 14, null]
+            gameState.board = Array.from({length: 16}, (_, i) => i < 15 ? i : null);
             gameState.emptyIndex = 15;
             
+            // 如果没有设置当前图片，选择第一个图片
+            if (!gameState.currentImage && imageList.length > 0) {
+                gameState.currentImage = imageList[0].url || imageList[0].path;
+                setActiveImageButton(0);
+            }
+            
+            await loadAndRenderImage();
             renderBoard();
             resetGameStats();
+        }
+        
+        // 测试图片是否可用
+        async function testImageAvailability() {
+            loadingElement.style.display = 'block';
+            
+            // 首先测试本地图片
+            const availableImages = [];
+            let hasLocalImages = false;
+            
+            for (const image of localImages) {
+                try {
+                    const img = new Image();
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                        img.src = image.path;
+                    });
+                    availableImages.push({
+                        name: image.name,
+                        url: image.path,
+                        isLocal: true
+                    });
+                    hasLocalImages = true;
+                } catch (error) {
+                    console.warn(`无法加载本地图片: ${image.path}`);
+                }
+            }
+            
+            // 如果没有本地图片，添加网络图片
+            if (!hasLocalImages) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = '未找到本地图片，已加载网络图片';
+                
+                // 添加所有网络图片
+                networkImages.forEach(image => {
+                    availableImages.push({
+                        name: image.name,
+                        url: image.url,
+                        isLocal: false
+                    });
+                });
+            }
+            
+            loadingElement.style.display = 'none';
+            return availableImages;
+        }
+        
+        // 加载并渲染图片到游戏板
+        async function loadAndRenderImage() {
+            if (!gameState.currentImage) return;
+            
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                
+                img.onload = function() {
+                    // 设置预览图
+                    previewImageElement.src = img.src;
+                    
+                    // 创建正方形画布
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const size = Math.min(img.width, img.height);
+                    
+                    // 设置画布为正方形
+                    canvas.width = 400;
+                    canvas.height = 400;
+                    
+                    // 裁剪图片为正方形
+                    ctx.drawImage(
+                        img,
+                        (img.width - size) / 2, (img.height - size) / 2, // 源裁剪起点
+                        size, size, // 源裁剪大小
+                        0, 0, // 目标起点
+                        400, 400 // 目标大小
+                    );
+                    
+                    // 创建图片切片
+                    createImageTiles(canvas);
+                    resolve();
+                };
+                
+                img.onerror = function() {
+                    console.warn('无法加载图片，使用备用图片');
+                    // 使用备用图片
+                    const randomImage = networkImages[Math.floor(Math.random() * networkImages.length)];
+                    gameState.currentImage = randomImage.url;
+                    loadAndRenderImage().then(resolve);
+                };
+                
+                img.src = gameState.currentImage;
+            });
+        }
+        
+        // 创建图片切片
+        function createImageTiles(canvas) {
+            const tileSize = 100; // 400 / 4 = 100
+            const ctx = canvas.getContext('2d');
+            
+            // 清空之前的图片数据
+            gameState.tileImages = [];
+            
+            // 为每个位置创建背景图
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    if (row === 3 && col === 3) {
+                        // 空白位置
+                        gameState.tileImages.push(null);
+                        continue;
+                    }
+                    
+                    // 创建小画布用于切片
+                    const tileCanvas = document.createElement('canvas');
+                    tileCanvas.width = tileSize;
+                    tileCanvas.height = tileSize;
+                    const tileCtx = tileCanvas.getContext('2d');
+                    
+                    // 从大图中裁剪切片
+                    tileCtx.drawImage(
+                        canvas,
+                        col * tileSize, row * tileSize, tileSize, tileSize,
+                        0, 0, tileSize, tileSize
+                    );
+                    
+                    // 转换为数据URL
+                    const dataURL = tileCanvas.toDataURL();
+                    gameState.tileImages.push(dataURL);
+                }
+            }
         }
         
         // 渲染游戏板
@@ -473,8 +762,20 @@
                 tile.className = value === null ? 'tile empty' : 'tile';
                 
                 if (value !== null) {
-                    tile.textContent = value;
-                    tile.dataset.index = index;
+                    tile.dataset.value = value; // 存储原始位置索引
+                    tile.dataset.index = index; // 存储当前位置索引
+                    
+                    // 设置背景图片
+                    if (gameState.tileImages[value]) {
+                        tile.style.backgroundImage = `url(${gameState.tileImages[value]})`;
+                        tile.style.backgroundSize = '100% 100%';
+                    }
+                    
+                    // 添加数字标签（调试用）
+                    const numberSpan = document.createElement('span');
+                    numberSpan.className = 'tile-number';
+                    numberSpan.textContent = value + 1;
+                    tile.appendChild(numberSpan);
                     
                     // 添加点击事件
                     tile.addEventListener('click', function() {
@@ -486,6 +787,8 @@
                         e.preventDefault();
                         handleTileClick(index);
                     }, {passive: false});
+                } else {
+                    tile.dataset.index = index;
                 }
                 
                 gameBoardElement.appendChild(tile);
@@ -537,12 +840,15 @@
         }
         
         // 打乱游戏板
-        function shuffleBoard() {
+        async function shuffleBoard() {
             if (!gameState.isGameActive) {
-                startGame();
+                await startGame();
             }
             
             const shuffleSteps = gameState.difficultySteps[gameState.currentDifficulty];
+            
+            // 保存当前空白位置
+            let currentEmptyIndex = gameState.emptyIndex;
             
             // 执行多次随机移动来打乱
             for (let i = 0; i < shuffleSteps; i++) {
@@ -550,20 +856,20 @@
                 const movableTiles = [];
                 
                 // 检查上方
-                if (gameState.emptyIndex > 3) {
-                    movableTiles.push(gameState.emptyIndex - 4);
+                if (currentEmptyIndex > 3) {
+                    movableTiles.push(currentEmptyIndex - 4);
                 }
                 // 检查下方
-                if (gameState.emptyIndex < 12) {
-                    movableTiles.push(gameState.emptyIndex + 4);
+                if (currentEmptyIndex < 12) {
+                    movableTiles.push(currentEmptyIndex + 4);
                 }
                 // 检查左侧
-                if (gameState.emptyIndex % 4 > 0) {
-                    movableTiles.push(gameState.emptyIndex - 1);
+                if (currentEmptyIndex % 4 > 0) {
+                    movableTiles.push(currentEmptyIndex - 1);
                 }
                 // 检查右侧
-                if (gameState.emptyIndex % 4 < 3) {
-                    movableTiles.push(gameState.emptyIndex + 1);
+                if (currentEmptyIndex % 4 < 3) {
+                    movableTiles.push(currentEmptyIndex + 1);
                 }
                 
                 // 随机选择一个可移动的方块
@@ -571,12 +877,15 @@
                 const tileToMove = movableTiles[randomIndex];
                 
                 // 移动这个方块
-                [gameState.board[gameState.emptyIndex], gameState.board[tileToMove]] = 
-                [gameState.board[tileToMove], gameState.board[gameState.emptyIndex]];
+                [gameState.board[currentEmptyIndex], gameState.board[tileToMove]] = 
+                [gameState.board[tileToMove], gameState.board[currentEmptyIndex]];
                 
                 // 更新空白位置索引
-                gameState.emptyIndex = tileToMove;
+                currentEmptyIndex = tileToMove;
             }
+            
+            // 更新游戏状态
+            gameState.emptyIndex = currentEmptyIndex;
             
             // 重置步数
             gameState.moveCount = 0;
@@ -587,11 +896,14 @@
         }
         
         // 开始游戏
-        function startGame() {
+        async function startGame() {
             if (gameState.isGameActive) return;
             
             gameState.isGameActive = true;
             resetGameStats();
+            
+            // 确保图片已加载
+            await loadAndRenderImage();
             
             // 启动计时器
             clearInterval(gameState.timerInterval);
@@ -619,11 +931,11 @@
             timerElement.textContent = `${minutes}:${seconds}`;
         }
         
-        // 检查是否获胜
+        // 检查是否获胜 - 修复版
         function checkWin() {
-            // 检查是否按顺序排列（1-15，最后一个是空位）
+            // 检查是否按顺序排列（0-14，最后一个是空位）
             for (let i = 0; i < 15; i++) {
-                if (gameState.board[i] !== i + 1) {
+                if (gameState.board[i] !== i) {
                     return false;
                 }
             }
@@ -703,11 +1015,11 @@
         }
         
         // 重置游戏
-        function resetGame() {
+        async function resetGame() {
             clearInterval(gameState.timerInterval);
             gameState.isGameActive = false;
             shuffleBtn.textContent = '开始游戏';
-            initGame();
+            await initGame();
         }
         
         // 设置难度
@@ -721,6 +1033,61 @@
                 } else {
                     btn.classList.remove('active');
                 }
+            });
+        }
+        
+        // 设置活动图片按钮
+        function setActiveImageButton(index) {
+            const imageButtons = document.querySelectorAll('.image-btn');
+            imageButtons.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // 切换图片
+        async function switchImage(imageUrl, index) {
+            gameState.currentImage = imageUrl;
+            setActiveImageButton(index);
+            
+            // 重置游戏板为初始状态
+            gameState.board = Array.from({length: 16}, (_, i) => i < 15 ? i : null);
+            gameState.emptyIndex = 15;
+            
+            // 加载新图片
+            await loadAndRenderImage();
+            
+            // 如果游戏已开始，重置游戏
+            if (gameState.isGameActive) {
+                gameState.moveCount = 0;
+                moveCountElement.textContent = gameState.moveCount;
+            }
+            
+            renderBoard();
+        }
+        
+        // 初始化图片选择器
+        function initImageSelector() {
+            imageButtonsContainer.innerHTML = '';
+            
+            imageList.forEach((image, index) => {
+                const button = document.createElement('button');
+                button.className = 'image-btn';
+                if (index === 0) button.classList.add('active');
+                
+                button.innerHTML = `
+                    <img src="${image.url}" alt="${image.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMzOTNFNDYiLz48cGF0aCBkPSJNMTAgMTVIMzBWMTlIMTBWMTVaTTEwIDIzSDI2VjI3SDEwVjIzWiIgZmlsbD0iI0JCQkJCQiIvPjwvc3ZnPg=='">
+                    <div>${image.name}</div>
+                `;
+                
+                button.addEventListener('click', async () => {
+                    await switchImage(image.url, index);
+                });
+                
+                imageButtonsContainer.appendChild(button);
             });
         }
         
@@ -784,8 +1151,20 @@
         // 键盘事件
         document.addEventListener('keydown', handleKeyDown);
         
-        // 初始化游戏
-        initGame();
+        // 初始化应用
+        async function initApp() {
+            // 测试图片可用性
+            imageList = await testImageAvailability();
+            
+            // 初始化图片选择器
+            initImageSelector();
+            
+            // 初始化游戏
+            await initGame();
+            
+            // 隐藏加载提示
+            loadingElement.style.display = 'none';
+        }
         
         // 浏览器兼容性检查
         function checkCompatibility() {
@@ -800,14 +1179,21 @@
                 issues.push("您的浏览器不支持Array.from方法");
             }
             
+            if (!HTMLCanvasElement.prototype.toDataURL) {
+                issues.push("您的浏览器不支持Canvas API");
+            }
+            
             if (issues.length > 0) {
                 console.warn("兼容性问题:", issues);
                 alert("您的浏览器可能不完全支持此游戏的所有功能，请考虑更新到最新版本的Chrome、Firefox、Edge或Safari浏览器。");
             }
         }
         
-        // 页面加载完成后运行兼容性检查
-        window.addEventListener('load', checkCompatibility);
+        // 页面加载完成后初始化应用
+        window.addEventListener('load', () => {
+            checkCompatibility();
+            initApp();
+        });
     </script>
 </body>
 </html>
