@@ -706,6 +706,7 @@
             currentImage: '',
             tileImages: [],
             imageCache: new Map(), // 缓存已加载的完整图片
+            tileCache: new Map(), // 缓存切片图片
             thumbnailCache: new Map(), // 缓存缩略图
             difficultySteps: {
                 easy: 20,
@@ -718,50 +719,50 @@
         const imageSources = [
             { 
                 name: '寿星1', 
-                localPath: 'images/1_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/1_compressed.jpg',
+                localPath: 'images/thumbnails/1.jpg',
+                thumbnailPath: 'images/thumbnails/1.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
                 name: '寿星2', 
-                localPath: 'images/2_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/2_compressed.jpg',
+                localPath: 'images/thumbnails/2.jpg',
+                thumbnailPath: 'images/thumbnails/2.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
                 name: '寿星3', 
-                localPath: 'images/3_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/3_compressed.jpg',
+                localPath: 'images/thumbnails/3.jpg',
+                thumbnailPath: 'images/thumbnails/3.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
                 name: '寿星4', 
-                localPath: 'images/4_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/4_compressed.jpg',
+                localPath: 'images/thumbnails/4.jpg',
+                thumbnailPath: 'images/thumbnails/4.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
                 name: '寿星5', 
-                localPath: 'images/5_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/5_compressed.jpg',
+                localPath: 'images/thumbnails/5.jpg',
+                thumbnailPath: 'images/thumbnails/5.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
                 name: '寿星6', 
-                localPath: 'images/6_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/6_compressed.jpg',
+                localPath: 'images/thumbnails/6.jpg',
+                thumbnailPath: 'images/thumbnails/6.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
                 name: '寿星7', 
-                localPath: 'images/7_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/7_compressed.jpg',
+                localPath: 'images/thumbnails/7.jpg',
+                thumbnailPath: 'images/thumbnails/7.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
                 name: '寿星8', 
-                localPath: 'images/8_compressed.jpg',
-                thumbnailPath: 'images/thumbnails/8_compressed.jpg',
+                localPath: 'images/thumbnails/8.jpg',
+                thumbnailPath: 'images/thumbnails/8.jpg',
                 fallbackUrl: 'https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             }
         ];
@@ -798,70 +799,109 @@
             // 如果没有设置当前图片，选择第一个图片
             if (!gameState.currentImage && imageSources.length > 0) {
                 gameState.currentImage = imageSources[0].localPath;
-                await loadFullImage(0);
+                // 检查缓存中是否已经有该图片的切片
+                if (!gameState.tileCache.has(gameState.currentImage)) {
+                    await loadFullImage(0);
+                } else {
+                    // 直接从缓存中获取
+                    const cached = gameState.tileCache.get(gameState.currentImage);
+                    gameState.tileImages = cached.tiles;
+                    previewImageElement.src = cached.preview;
+                }
             }
             
             renderBoard();
             resetGameStats();
         }
         
-        // 测试图片可用性
+        // 并行加载图片可用性测试
         async function testImageAvailability() {
             loadingElement.style.display = 'block';
+            loadingElement.textContent = '正在并行加载图片...';
             
-            const availableImages = [];
-            
-            for (const image of imageSources) {
-                // 先尝试加载缩略图
-                try {
-                    const thumbnailUrl = image.thumbnailPath || image.localPath;
-                    await loadImage(thumbnailUrl);
-                    
-                    availableImages.push({
-                        name: image.name,
-                        localPath: image.localPath,
-                        thumbnailPath: thumbnailUrl,
-                        fallbackUrl: image.fallbackUrl,
-                        isAvailable: true
-                    });
-                } catch (error) {
-                    console.warn(`无法加载缩略图: ${image.name}`, error);
-                    
-                    // 缩略图加载失败，尝试本地原图
+            try {
+                // 并行加载所有缩略图
+                const thumbnailPromises = imageSources.map(async (image, index) => {
                     try {
-                        await loadImage(image.localPath);
-                        availableImages.push({
-                            name: image.name,
-                            localPath: image.localPath,
-                            thumbnailPath: image.localPath, // 使用原图作为缩略图
-                            fallbackUrl: image.fallbackUrl,
-                            isAvailable: true
-                        });
-                    } catch (localError) {
-                        console.warn(`无法加载本地图片: ${image.name}`, localError);
+                        // 先尝试加载缩略图
+                        const thumbnailUrl = image.thumbnailPath || image.localPath;
+                        const thumbnailImg = await loadImage(thumbnailUrl);
                         
-                        // 本地图片也失败，标记为不可用
-                        availableImages.push({
+                        return {
+                            index,
                             name: image.name,
                             localPath: image.localPath,
-                            thumbnailPath: null,
+                            thumbnailPath: thumbnailUrl,
                             fallbackUrl: image.fallbackUrl,
-                            isAvailable: false
-                        });
+                            thumbnail: thumbnailImg,
+                            isAvailable: true,
+                            error: null
+                        };
+                    } catch (thumbnailError) {
+                        console.warn(`缩略图加载失败: ${image.name}`, thumbnailError);
+                        
+                        // 缩略图失败，尝试直接加载原图作为缩略图
+                        try {
+                            const localImg = await loadImage(image.localPath);
+                            return {
+                                index,
+                                name: image.name,
+                                localPath: image.localPath,
+                                thumbnailPath: image.localPath,
+                                fallbackUrl: image.fallbackUrl,
+                                thumbnail: localImg,
+                                isAvailable: true,
+                                error: null
+                            };
+                        } catch (localError) {
+                            console.warn(`本地图片加载失败: ${image.name}`, localError);
+                            return {
+                                index,
+                                name: image.name,
+                                localPath: image.localPath,
+                                thumbnailPath: null,
+                                fallbackUrl: image.fallbackUrl,
+                                thumbnail: null,
+                                isAvailable: false,
+                                error: localError
+                            };
+                        }
                     }
+                });
+                
+                // 等待所有图片加载完成
+                const results = await Promise.allSettled(thumbnailPromises);
+                
+                // 处理结果
+                const availableImages = results.map(result => {
+                    if (result.status === 'fulfilled') {
+                        return result.value;
+                    } else {
+                        console.error('图片加载Promise失败:', result.reason);
+                        return null;
+                    }
+                }).filter(img => img !== null);
+                
+                loadingElement.style.display = 'none';
+                
+                // 检查是否有可用图片
+                const hasAvailableImages = availableImages.some(img => img.isAvailable);
+                if (!hasAvailableImages) {
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = '未找到本地图片，请确保images文件夹存在并包含图片文件';
                 }
-            }
-            
-            loadingElement.style.display = 'none';
-            
-            // 检查是否有可用图片
-            const hasAvailableImages = availableImages.some(img => img.isAvailable);
-            if (!hasAvailableImages) {
+                
+                return availableImages;
+                
+            } catch (error) {
+                console.error('图片加载过程中出错:', error);
+                loadingElement.style.display = 'none';
                 errorElement.style.display = 'block';
-                errorElement.textContent = '未找到本地图片，请确保images文件夹存在并包含图片文件';
+                errorElement.textContent = '图片加载失败，请检查网络连接';
+                
+                // 返回空数组
+                return [];
             }
-            
-            return availableImages;
         }
         
         // 通用图片加载函数
@@ -873,57 +913,130 @@
                 }
                 
                 const img = new Image();
-                img.onload = () => resolve(img);
-                img.onerror = () => reject(new Error(`无法加载图片: ${url}`));
+                img.crossOrigin = 'anonymous'; // 允许跨域图片
+                
+                // 设置超时
+                const timeout = setTimeout(() => {
+                    img.onload = null;
+                    img.onerror = null;
+                    reject(new Error(`图片加载超时: ${url}`));
+                }, 10000); // 10秒超时
+                
+                img.onload = () => {
+                    clearTimeout(timeout);
+                    resolve(img);
+                };
+                
+                img.onerror = () => {
+                    clearTimeout(timeout);
+                    reject(new Error(`无法加载图片: ${url}`));
+                };
+                
                 img.src = url;
             });
         }
         
-        // 加载完整图片（用于游戏）
+        // 加载完整图片（用于游戏）- 并行加载优化版
         async function loadFullImage(imageIndex) {
             const imageInfo = imageSources[imageIndex];
             
-            // 检查缓存
+            // 检查缓存中是否已经有完整图片
             if (gameState.imageCache.has(imageInfo.localPath)) {
-                gameState.currentImage = gameState.imageCache.get(imageInfo.localPath);
-                await createImageTiles(gameState.currentImage);
+                const cachedImg = gameState.imageCache.get(imageInfo.localPath);
+                gameState.currentImage = cachedImg.src;
+                
+                // 检查是否已经有切片缓存
+                if (gameState.tileCache.has(imageInfo.localPath)) {
+                    const cached = gameState.tileCache.get(imageInfo.localPath);
+                    gameState.tileImages = cached.tiles;
+                    previewImageElement.src = cached.preview;
+                    return;
+                }
+                
+                await createImageTiles(cachedImg);
                 return;
             }
             
             loadingElement.style.display = 'block';
+            loadingElement.textContent = `正在加载图片: ${imageInfo.name}...`;
             
             try {
-                // 先尝试本地图片
-                const img = await loadImage(imageInfo.localPath);
-                gameState.currentImage = img.src;
-                gameState.imageCache.set(imageInfo.localPath, img.src);
-                await createImageTiles(img);
-            } catch (localError) {
-                console.warn('无法加载本地图片，尝试网络图片', localError);
+                // 并行尝试本地和备用图片
+                const loadPromises = [
+                    // 优先尝试本地图片
+                    loadImage(imageInfo.localPath).catch(error => {
+                        console.warn('本地图片加载失败:', error);
+                        throw error;
+                    }),
+                    // 同时准备备用图片
+                    loadImage(imageInfo.fallbackUrl).catch(error => {
+                        console.warn('备用图片加载失败:', error);
+                        throw error;
+                    })
+                ];
                 
+                // 使用Promise.race先获取第一个成功的图片
+                let img;
                 try {
-                    // 尝试网络备用图片
-                    const fallbackImg = await loadImage(imageInfo.fallbackUrl);
-                    gameState.currentImage = fallbackImg.src;
-                    gameState.imageCache.set(imageInfo.localPath, fallbackImg.src);
-                    await createImageTiles(fallbackImg);
-                    
+                    img = await Promise.any(loadPromises);
+                    console.log(`成功加载图片: ${img.src.includes('local') ? '本地' : '网络'}`);
+                } catch (error) {
+                    // 所有加载都失败
+                    throw new Error('所有图片源都加载失败');
+                }
+                
+                // 缓存完整图片
+                gameState.currentImage = img.src;
+                gameState.imageCache.set(imageInfo.localPath, img);
+                
+                // 创建图片切片
+                await createImageTiles(img);
+                
+                // 如果是网络图片，显示提示
+                if (img.src === imageInfo.fallbackUrl) {
                     errorElement.style.display = 'block';
                     errorElement.textContent = `"${imageInfo.name}"使用网络图片`;
                     
                     setTimeout(() => {
                         errorElement.style.display = 'none';
                     }, 3000);
-                } catch (fallbackError) {
-                    console.error('所有图片源都失败', fallbackError);
-                    errorElement.style.display = 'block';
-                    errorElement.textContent = '图片加载失败，请检查网络连接';
-                    
-                    // 使用一个简单的颜色方块作为替代
-                    createColorTiles();
                 }
+                
+            } catch (error) {
+                console.error('所有图片源都失败', error);
+                errorElement.style.display = 'block';
+                errorElement.textContent = '图片加载失败，使用默认颜色方块';
+                
+                // 使用一个简单的颜色方块作为替代
+                createColorTiles();
             } finally {
                 loadingElement.style.display = 'none';
+            }
+        }
+        
+        // 预加载下一张图片（性能优化）
+        async function prefetchNextImage(currentIndex) {
+            const nextIndex = (currentIndex + 1) % imageSources.length;
+            const imageInfo = imageSources[nextIndex];
+            
+            // 如果已经在缓存中，跳过
+            if (gameState.imageCache.has(imageInfo.localPath) || 
+                gameState.tileCache.has(imageInfo.localPath)) {
+                return;
+            }
+            
+            // 静默预加载，不显示加载提示
+            try {
+                const img = await loadImage(imageInfo.localPath).catch(() => 
+                    loadImage(imageInfo.fallbackUrl).catch(() => null)
+                );
+                
+                if (img) {
+                    gameState.imageCache.set(imageInfo.localPath, img);
+                    // 可以延迟创建切片，等需要时再创建
+                }
+            } catch (error) {
+                // 静默失败
             }
         }
         
@@ -937,11 +1050,41 @@
             ];
             
             gameState.tileImages = colors;
+            previewImageElement.src = '';
+            
+            // 创建预览图（颜色拼图）
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+            const tileSize = 100;
+            
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    const index = row * 4 + col;
+                    if (index < 15) {
+                        ctx.fillStyle = colors[index];
+                        ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                    }
+                }
+            }
+            
+            previewImageElement.src = canvas.toDataURL();
         }
         
-        // 创建图片切片
+        // 创建图片切片并缓存
         async function createImageTiles(imageElement) {
             return new Promise((resolve) => {
+                // 如果已经有缓存，直接使用
+                const cacheKey = imageElement.src;
+                if (gameState.tileCache.has(cacheKey)) {
+                    const cached = gameState.tileCache.get(cacheKey);
+                    gameState.tileImages = cached.tiles;
+                    previewImageElement.src = cached.preview;
+                    resolve();
+                    return;
+                }
+                
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 const size = Math.min(imageElement.width, imageElement.height);
@@ -959,14 +1102,17 @@
                     400, 400
                 );
                 
+                // 保存预览图
+                const previewDataUrl = canvas.toDataURL();
+                
                 // 创建图片切片
                 const tileSize = 100;
-                gameState.tileImages = [];
+                const tiles = [];
                 
                 for (let row = 0; row < 4; row++) {
                     for (let col = 0; col < 4; col++) {
                         if (row === 3 && col === 3) {
-                            gameState.tileImages.push(null);
+                            tiles.push(null);
                             continue;
                         }
                         
@@ -981,12 +1127,19 @@
                             0, 0, tileSize, tileSize
                         );
                         
-                        gameState.tileImages.push(tileCanvas.toDataURL());
+                        tiles.push(tileCanvas.toDataURL());
                     }
                 }
                 
+                // 缓存结果
+                gameState.tileImages = tiles;
+                gameState.tileCache.set(cacheKey, {
+                    tiles: tiles,
+                    preview: previewDataUrl
+                });
+                
                 // 设置预览图
-                previewImageElement.src = canvas.toDataURL();
+                previewImageElement.src = previewDataUrl;
                 resolve();
             });
         }
@@ -1252,18 +1405,29 @@
         
         // 切换图片
         async function switchImage(imageIndex) {
-            await loadFullImage(imageIndex);
+            loadingElement.style.display = 'block';
+            loadingElement.textContent = `正在切换图片: ${imageSources[imageIndex].name}...`;
             
-            gameState.board = Array.from({length: 16}, (_, i) => i < 15 ? i : null);
-            gameState.emptyIndex = 15;
-            
-            if (gameState.isGameActive) {
-                gameState.moveCount = 0;
-                moveCountElement.textContent = gameState.moveCount;
+            try {
+                await loadFullImage(imageIndex);
+                
+                gameState.board = Array.from({length: 16}, (_, i) => i < 15 ? i : null);
+                gameState.emptyIndex = 15;
+                
+                if (gameState.isGameActive) {
+                    gameState.moveCount = 0;
+                    moveCountElement.textContent = gameState.moveCount;
+                }
+                
+                renderBoard();
+                setActiveImageButton(imageIndex);
+                
+                // 预加载下一张图片
+                prefetchNextImage(imageIndex);
+                
+            } finally {
+                loadingElement.style.display = 'none';
             }
-            
-            renderBoard();
-            setActiveImageButton(imageIndex);
         }
         
         // 设置活动图片按钮
@@ -1284,15 +1448,16 @@
             
             const availableImages = await testImageAvailability();
             
-            availableImages.forEach((imageInfo, index) => {
+            // 创建所有按钮（并行处理）
+            const buttonPromises = availableImages.map(async (imageInfo, index) => {
                 const button = document.createElement('button');
                 button.className = 'image-btn';
                 if (index === 0) button.classList.add('active');
                 
-                if (imageInfo.isAvailable && imageInfo.thumbnailPath) {
-                    // 加载缩略图
+                if (imageInfo.isAvailable && imageInfo.thumbnail) {
+                    // 使用已加载的缩略图
                     const img = document.createElement('img');
-                    img.src = imageInfo.thumbnailPath;
+                    img.src = imageInfo.thumbnail.src;
                     img.alt = imageInfo.name;
                     img.loading = 'lazy';
                     img.onerror = function() {
@@ -1326,8 +1491,21 @@
                     }, { passive: false });
                 }
                 
+                return button;
+            });
+            
+            // 并行创建所有按钮并添加到容器
+            const buttons = await Promise.all(buttonPromises);
+            buttons.forEach(button => {
                 imageButtonsContainer.appendChild(button);
             });
+            
+            // 预加载第一张图片的完整版
+            if (availableImages.length > 0 && availableImages[0].isAvailable) {
+                setTimeout(() => {
+                    loadFullImage(0);
+                }, 500);
+            }
         }
         
         // 键盘控制
@@ -1403,6 +1581,10 @@
             
             if (!HTMLCanvasElement) {
                 issues.push("您的浏览器不支持Canvas API");
+            }
+            
+            if (!Promise.allSettled) {
+                console.warn("浏览器不支持Promise.allSettled，将使用兼容模式");
             }
             
             if (issues.length > 0) {
