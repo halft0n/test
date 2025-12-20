@@ -2,14 +2,17 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>图片华容道游戏</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -20,42 +23,46 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         .container {
             width: 100%;
             max-width: 900px;
-            background-color: rgba(30, 30, 46, 0.9);
+            background-color: rgba(30, 30, 46, 0.95);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             overflow: hidden;
-            padding: 30px;
+            padding: 25px;
+            touch-action: manipulation;
         }
         
         header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid #00adb5;
         }
         
         h1 {
             color: #00adb5;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
         
         .subtitle {
             color: #eeeeee;
-            font-size: 1rem;
+            font-size: clamp(0.85rem, 2vw, 1rem);
             opacity: 0.8;
         }
         
         .main-content {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 25px;
         }
         
         .game-section {
@@ -68,7 +75,7 @@
             min-width: 300px;
             background-color: rgba(40, 40, 60, 0.7);
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
         }
         
         .game-board {
@@ -84,16 +91,25 @@
             margin: 0 auto 20px;
             overflow: hidden;
             position: relative;
+            touch-action: none;
+            user-select: none;
         }
         
         .tile {
-            background-size: 400% 400%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border-radius: 4px;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.2s, opacity 0.2s;
+            transition: transform 0.2s ease, opacity 0.2s ease;
             position: relative;
             background-color: #0a2647;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         
         .tile-number {
@@ -102,9 +118,10 @@
             left: 5px;
             background: rgba(0, 0, 0, 0.5);
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             padding: 2px 5px;
             border-radius: 3px;
+            pointer-events: none;
         }
         
         .tile:hover {
@@ -112,15 +129,15 @@
             opacity: 0.9;
         }
         
+        .tile:active {
+            transform: scale(0.98);
+        }
+        
         .empty {
             background: rgba(15, 52, 96, 0.5);
             cursor: default;
             position: relative;
-        }
-        
-        .empty:hover {
-            transform: none;
-            opacity: 1;
+            pointer-events: none;
         }
         
         .empty::after {
@@ -136,49 +153,52 @@
         .stats {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
         }
         
         .stat-box {
             background: linear-gradient(145deg, #393e46, #222831);
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
             text-align: center;
-            min-width: 130px;
+            min-width: 120px;
             flex: 1;
         }
         
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #00adb5;
             margin-top: 5px;
         }
         
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #bbbbbb;
         }
         
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
         
         .btn {
             flex: 1;
-            min-width: 120px;
+            min-width: 110px;
             padding: 14px 10px;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            appearance: none;
         }
         
         .btn-primary {
@@ -201,29 +221,36 @@
             box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
         }
         
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
         .difficulty {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .difficulty h3 {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #eeeeee;
+            font-size: 1.1rem;
         }
         
         .difficulty-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
         
         .diff-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px 8px;
             background-color: #393e46;
             border: none;
             border-radius: 8px;
             color: #bbbbbb;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.9rem;
+            touch-action: manipulation;
         }
         
         .diff-btn.active {
@@ -232,24 +259,25 @@
         }
         
         .image-selector {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .image-selector h3 {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #eeeeee;
+            font-size: 1.1rem;
         }
         
         .image-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
         
         .image-btn {
             flex: 1;
-            min-width: 100px;
-            padding: 12px;
+            min-width: 90px;
+            padding: 10px;
             background-color: #393e46;
             border: none;
             border-radius: 8px;
@@ -257,6 +285,7 @@
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
+            touch-action: manipulation;
         }
         
         .image-btn.active {
@@ -270,26 +299,42 @@
             object-fit: cover;
             border-radius: 4px;
             margin-bottom: 5px;
+            background-color: #2d3239;
+        }
+        
+        .image-btn .placeholder {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #2d3239 25%, #393e46 25%, #393e46 50%, #2d3239 50%, #2d3239 75%, #393e46 75%);
+            background-size: 8px 8px;
+            border-radius: 4px;
+            margin: 0 auto 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 0.7rem;
         }
         
         .instructions {
             background-color: rgba(40, 40, 60, 0.7);
             border-radius: 15px;
-            padding: 20px;
-            margin-top: 25px;
+            padding: 18px;
+            margin-top: 20px;
             border-left: 5px solid #00adb5;
         }
         
         .instructions h3 {
             color: #00adb5;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
         }
         
         .instructions p {
             line-height: 1.5;
             margin-bottom: 8px;
             color: #cccccc;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         
         .win-message {
@@ -298,14 +343,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
+            background-color: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.5s;
+            transition: opacity 0.5s ease;
+            padding: 20px;
         }
         
         .win-message.show {
@@ -315,23 +361,28 @@
         
         .win-content {
             background: linear-gradient(145deg, #1a1a2e, #16213e);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             text-align: center;
-            max-width: 450px;
-            width: 90%;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         
         .win-content h2 {
             color: #00ff88;
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
             margin-bottom: 15px;
         }
         
         .win-stats {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
+            font-size: 1rem;
+            margin-bottom: 20px;
             color: #eeeeee;
+        }
+        
+        .win-stats p {
+            margin-bottom: 10px;
         }
         
         .win-stats span {
@@ -346,17 +397,19 @@
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 15px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #bbbbbb;
             text-align: center;
         }
         
         .preview-image {
             width: 100%;
-            max-width: 200px;
-            margin: 0 auto 15px;
+            max-width: 180px;
+            margin: 0 auto 10px;
             display: block;
             border-radius: 8px;
+            background: linear-gradient(45deg, #2d3239 25%, #393e46 25%, #393e46 50%, #2d3239 50%, #2d3239 75%, #393e46 75%);
+            background-size: 20px 20px;
         }
         
         .preview-container {
@@ -372,6 +425,7 @@
             text-align: center;
             padding: 10px;
             color: #00adb5;
+            font-size: 0.9rem;
         }
         
         .error-message {
@@ -383,11 +437,61 @@
             margin-bottom: 15px;
             color: #ff8787;
             text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .touch-controls {
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .touch-btn {
+            background: rgba(0, 173, 181, 0.2);
+            border: 1px solid rgba(0, 173, 181, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.5rem;
+            padding: 10px;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        .touch-btn.up {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        
+        .touch-btn.down {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        
+        .touch-btn.left {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        
+        .touch-btn.right {
+            grid-column: 3;
+            grid-row: 2;
         }
         
         @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
             .main-content {
                 flex-direction: column;
+                gap: 20px;
             }
             
             .controls {
@@ -398,8 +502,8 @@
                 min-width: 100%;
             }
             
-            h1 {
-                font-size: 2rem;
+            .touch-controls {
+                display: grid;
             }
             
             .mobile-notice {
@@ -409,15 +513,18 @@
             .image-buttons {
                 flex-direction: column;
             }
-        }
-        
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
+            
+            .image-btn {
+                min-width: 100%;
+                text-align: left;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px;
             }
             
-            .control-section {
-                padding: 20px;
+            .image-btn img {
+                margin-bottom: 0;
             }
             
             .game-board {
@@ -426,12 +533,59 @@
             }
             
             .stat-box {
-                min-width: 110px;
-                padding: 12px;
+                min-width: 100px;
+                padding: 10px;
             }
             
             .stat-value {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            
+            .control-section {
+                padding: 15px;
+            }
+            
+            .game-board {
+                gap: 1px;
+                padding: 1px;
+            }
+            
+            .tile-number {
+                font-size: 0.7rem;
+                padding: 1px 3px;
+            }
+            
+            .instructions {
+                padding: 15px;
+            }
+            
+            .win-content {
+                padding: 20px;
+            }
+            
+            .preview-image {
+                max-width: 150px;
+            }
+        }
+        
+        @media (hover: none) and (pointer: coarse) {
+            .tile:hover {
+                transform: none;
+            }
+            
+            .btn:hover {
+                transform: none;
             }
         }
     </style>
@@ -444,7 +598,7 @@
         </header>
         
         <div class="mobile-notice">
-            提示：您可以使用手指拖动方块，或点击与空白相邻的方块
+            提示：点击与空白相邻的方块可以移动，也可以使用下方方向键控制
         </div>
         
         <div class="loading" id="loading">
@@ -458,12 +612,19 @@
         <div class="main-content">
             <div class="game-section">
                 <div class="preview-container">
-                    <img id="preview-image" class="preview-image" alt="当前图片预览">
+                    <img id="preview-image" class="preview-image" alt="当前图片预览" loading="lazy">
                     <div>当前拼图预览</div>
                 </div>
                 
                 <div class="game-board" id="game-board">
                     <!-- 游戏方块将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="touch-controls" id="touch-controls">
+                    <button class="touch-btn up" data-direction="up">↑</button>
+                    <button class="touch-btn down" data-direction="down">↓</button>
+                    <button class="touch-btn left" data-direction="left">←</button>
+                    <button class="touch-btn right" data-direction="right">→</button>
                 </div>
                 
                 <div class="stats">
@@ -536,14 +697,16 @@
         // 游戏状态变量
         let gameState = {
             board: [],
-            emptyIndex: 15, // 空白位置索引（0-15）
+            emptyIndex: 15,
             moveCount: 0,
             gameTime: 0,
             timerInterval: null,
             isGameActive: false,
             currentDifficulty: 'easy',
             currentImage: '',
-            tileImages: [], // 存储每个方块的图片数据
+            tileImages: [],
+            imageCache: new Map(), // 缓存已加载的完整图片
+            thumbnailCache: new Map(), // 缓存缩略图
             difficultySteps: {
                 easy: 20,
                 medium: 50,
@@ -551,44 +714,57 @@
             }
         };
         
-        // 预设图片列表 - 首先尝试从本地images文件夹加载
-        const localImages = [
-            { name: '寿星1', path: 'images/1.jpg' },
-            { name: '寿星2', path: 'images/2.jpg' },
-            { name: '寿星3', path: 'images/3.jpg' },
-            { name: '寿星4', path: 'images/4.jpg' },
-            { name: '寿星5', path: 'images/5.jpg' },
-            { name: '寿星6', path: 'images/6.jpg' },
-            { name: '寿星7', path: 'images/7.jpg' },
-            { name: '寿星8', path: 'images/8.jpg' }
-        ];
-        
-        // 网络图片作为备选（使用Pexels的高质量免费图片）
-        const networkImages = [
+        // 预设图片列表 - 优化为懒加载模式
+        const imageSources = [
             { 
-                name: '山景', 
-                url: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+                name: '寿星1', 
+                localPath: 'images/1.jpg',
+                thumbnailPath: 'images/thumbnails/1.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
-                name: '海滩', 
-                url: 'https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+                name: '寿星2', 
+                localPath: 'images/2.jpg',
+                thumbnailPath: 'images/thumbnails/2.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
-                name: '森林', 
-                url: 'https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+                name: '寿星3', 
+                localPath: 'images/3.jpg',
+                thumbnailPath: 'images/thumbnails/3.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
-                name: '城市', 
-                url: 'https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+                name: '寿星4', 
+                localPath: 'images/4.jpg',
+                thumbnailPath: 'images/thumbnails/4.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             },
             { 
-                name: '星空', 
-                url: 'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+                name: '寿星5', 
+                localPath: 'images/5.jpg',
+                thumbnailPath: 'images/thumbnails/5.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            },
+            { 
+                name: '寿星6', 
+                localPath: 'images/6.jpg',
+                thumbnailPath: 'images/thumbnails/6.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            },
+            { 
+                name: '寿星7', 
+                localPath: 'images/7.jpg',
+                thumbnailPath: 'images/thumbnails/7.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
+            },
+            { 
+                name: '寿星8', 
+                localPath: 'images/8.jpg',
+                thumbnailPath: 'images/thumbnails/8.jpg',
+                fallbackUrl: 'https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop'
             }
         ];
-        
-        // 最终使用的图片列表
-        let imageList = [];
         
         // DOM 元素
         const gameBoardElement = document.getElementById('game-board');
@@ -607,152 +783,212 @@
         const playAgainBtn = document.getElementById('play-again-btn');
         const loadingElement = document.getElementById('loading');
         const errorElement = document.getElementById('error-message');
+        const touchControls = document.getElementById('touch-controls');
+        const touchButtons = document.querySelectorAll('.touch-btn');
+        
+        // 设备检测
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         
         // 初始化游戏
         async function initGame() {
-            // 创建初始索引数组 [0, 1, 2, ..., 14, null]
             gameState.board = Array.from({length: 16}, (_, i) => i < 15 ? i : null);
             gameState.emptyIndex = 15;
             
             // 如果没有设置当前图片，选择第一个图片
-            if (!gameState.currentImage && imageList.length > 0) {
-                gameState.currentImage = imageList[0].url || imageList[0].path;
-                setActiveImageButton(0);
+            if (!gameState.currentImage && imageSources.length > 0) {
+                gameState.currentImage = imageSources[0].localPath;
+                await loadFullImage(0);
             }
             
-            await loadAndRenderImage();
             renderBoard();
             resetGameStats();
         }
         
-        // 测试图片是否可用
+        // 测试图片可用性
         async function testImageAvailability() {
             loadingElement.style.display = 'block';
             
-            // 首先测试本地图片
             const availableImages = [];
-            let hasLocalImages = false;
             
-            for (const image of localImages) {
+            for (const image of imageSources) {
+                // 先尝试加载缩略图
                 try {
-                    const img = new Image();
-                    await new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = reject;
-                        img.src = image.path;
-                    });
+                    const thumbnailUrl = image.thumbnailPath || image.localPath;
+                    await loadImage(thumbnailUrl);
+                    
                     availableImages.push({
                         name: image.name,
-                        url: image.path,
-                        isLocal: true
+                        localPath: image.localPath,
+                        thumbnailPath: thumbnailUrl,
+                        fallbackUrl: image.fallbackUrl,
+                        isAvailable: true
                     });
-                    hasLocalImages = true;
                 } catch (error) {
-                    console.warn(`无法加载本地图片: ${image.path}`);
+                    console.warn(`无法加载缩略图: ${image.name}`, error);
+                    
+                    // 缩略图加载失败，尝试本地原图
+                    try {
+                        await loadImage(image.localPath);
+                        availableImages.push({
+                            name: image.name,
+                            localPath: image.localPath,
+                            thumbnailPath: image.localPath, // 使用原图作为缩略图
+                            fallbackUrl: image.fallbackUrl,
+                            isAvailable: true
+                        });
+                    } catch (localError) {
+                        console.warn(`无法加载本地图片: ${image.name}`, localError);
+                        
+                        // 本地图片也失败，标记为不可用
+                        availableImages.push({
+                            name: image.name,
+                            localPath: image.localPath,
+                            thumbnailPath: null,
+                            fallbackUrl: image.fallbackUrl,
+                            isAvailable: false
+                        });
+                    }
                 }
-            }
-            
-            // 如果没有本地图片，添加网络图片
-            if (!hasLocalImages) {
-                errorElement.style.display = 'block';
-                errorElement.textContent = '未找到本地图片，已加载网络图片';
-                
-                // 添加所有网络图片
-                networkImages.forEach(image => {
-                    availableImages.push({
-                        name: image.name,
-                        url: image.url,
-                        isLocal: false
-                    });
-                });
             }
             
             loadingElement.style.display = 'none';
+            
+            // 检查是否有可用图片
+            const hasAvailableImages = availableImages.some(img => img.isAvailable);
+            if (!hasAvailableImages) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = '未找到本地图片，请确保images文件夹存在并包含图片文件';
+            }
+            
             return availableImages;
         }
         
-        // 加载并渲染图片到游戏板
-        async function loadAndRenderImage() {
-            if (!gameState.currentImage) return;
-            
-            return new Promise((resolve) => {
+        // 通用图片加载函数
+        function loadImage(url) {
+            return new Promise((resolve, reject) => {
+                if (!url) {
+                    reject(new Error('URL为空'));
+                    return;
+                }
+                
                 const img = new Image();
-                img.crossOrigin = "anonymous";
-                
-                img.onload = function() {
-                    // 设置预览图
-                    previewImageElement.src = img.src;
-                    
-                    // 创建正方形画布
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const size = Math.min(img.width, img.height);
-                    
-                    // 设置画布为正方形
-                    canvas.width = 400;
-                    canvas.height = 400;
-                    
-                    // 裁剪图片为正方形
-                    ctx.drawImage(
-                        img,
-                        (img.width - size) / 2, (img.height - size) / 2, // 源裁剪起点
-                        size, size, // 源裁剪大小
-                        0, 0, // 目标起点
-                        400, 400 // 目标大小
-                    );
-                    
-                    // 创建图片切片
-                    createImageTiles(canvas);
-                    resolve();
-                };
-                
-                img.onerror = function() {
-                    console.warn('无法加载图片，使用备用图片');
-                    // 使用备用图片
-                    const randomImage = networkImages[Math.floor(Math.random() * networkImages.length)];
-                    gameState.currentImage = randomImage.url;
-                    loadAndRenderImage().then(resolve);
-                };
-                
-                img.src = gameState.currentImage;
+                img.onload = () => resolve(img);
+                img.onerror = () => reject(new Error(`无法加载图片: ${url}`));
+                img.src = url;
             });
         }
         
-        // 创建图片切片
-        function createImageTiles(canvas) {
-            const tileSize = 100; // 400 / 4 = 100
-            const ctx = canvas.getContext('2d');
+        // 加载完整图片（用于游戏）
+        async function loadFullImage(imageIndex) {
+            const imageInfo = imageSources[imageIndex];
             
-            // 清空之前的图片数据
-            gameState.tileImages = [];
-            
-            // 为每个位置创建背景图
-            for (let row = 0; row < 4; row++) {
-                for (let col = 0; col < 4; col++) {
-                    if (row === 3 && col === 3) {
-                        // 空白位置
-                        gameState.tileImages.push(null);
-                        continue;
-                    }
-                    
-                    // 创建小画布用于切片
-                    const tileCanvas = document.createElement('canvas');
-                    tileCanvas.width = tileSize;
-                    tileCanvas.height = tileSize;
-                    const tileCtx = tileCanvas.getContext('2d');
-                    
-                    // 从大图中裁剪切片
-                    tileCtx.drawImage(
-                        canvas,
-                        col * tileSize, row * tileSize, tileSize, tileSize,
-                        0, 0, tileSize, tileSize
-                    );
-                    
-                    // 转换为数据URL
-                    const dataURL = tileCanvas.toDataURL();
-                    gameState.tileImages.push(dataURL);
-                }
+            // 检查缓存
+            if (gameState.imageCache.has(imageInfo.localPath)) {
+                gameState.currentImage = gameState.imageCache.get(imageInfo.localPath);
+                await createImageTiles(gameState.currentImage);
+                return;
             }
+            
+            loadingElement.style.display = 'block';
+            
+            try {
+                // 先尝试本地图片
+                const img = await loadImage(imageInfo.localPath);
+                gameState.currentImage = img.src;
+                gameState.imageCache.set(imageInfo.localPath, img.src);
+                await createImageTiles(img);
+            } catch (localError) {
+                console.warn('无法加载本地图片，尝试网络图片', localError);
+                
+                try {
+                    // 尝试网络备用图片
+                    const fallbackImg = await loadImage(imageInfo.fallbackUrl);
+                    gameState.currentImage = fallbackImg.src;
+                    gameState.imageCache.set(imageInfo.localPath, fallbackImg.src);
+                    await createImageTiles(fallbackImg);
+                    
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = `"${imageInfo.name}"使用网络图片`;
+                    
+                    setTimeout(() => {
+                        errorElement.style.display = 'none';
+                    }, 3000);
+                } catch (fallbackError) {
+                    console.error('所有图片源都失败', fallbackError);
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = '图片加载失败，请检查网络连接';
+                    
+                    // 使用一个简单的颜色方块作为替代
+                    createColorTiles();
+                }
+            } finally {
+                loadingElement.style.display = 'none';
+            }
+        }
+        
+        // 创建颜色方块（备用）
+        function createColorTiles() {
+            const colors = [
+                '#FF6B6B', '#4ECDC4', '#FFD166', '#06D6A0',
+                '#118AB2', '#073B4C', '#EF476F', '#7209B7',
+                '#3A86FF', '#FB5607', '#8338EC', '#FF006E',
+                '#FFBE0B', '#3A86FF', '#FB5607', 'transparent'
+            ];
+            
+            gameState.tileImages = colors;
+        }
+        
+        // 创建图片切片
+        async function createImageTiles(imageElement) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const size = Math.min(imageElement.width, imageElement.height);
+                
+                canvas.width = 400;
+                canvas.height = 400;
+                
+                // 裁剪图片为正方形
+                ctx.drawImage(
+                    imageElement,
+                    (imageElement.width - size) / 2,
+                    (imageElement.height - size) / 2,
+                    size, size,
+                    0, 0,
+                    400, 400
+                );
+                
+                // 创建图片切片
+                const tileSize = 100;
+                gameState.tileImages = [];
+                
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        if (row === 3 && col === 3) {
+                            gameState.tileImages.push(null);
+                            continue;
+                        }
+                        
+                        const tileCanvas = document.createElement('canvas');
+                        tileCanvas.width = tileSize;
+                        tileCanvas.height = tileSize;
+                        const tileCtx = tileCanvas.getContext('2d');
+                        
+                        tileCtx.drawImage(
+                            canvas,
+                            col * tileSize, row * tileSize, tileSize, tileSize,
+                            0, 0, tileSize, tileSize
+                        );
+                        
+                        gameState.tileImages.push(tileCanvas.toDataURL());
+                    }
+                }
+                
+                // 设置预览图
+                previewImageElement.src = canvas.toDataURL();
+                resolve();
+            });
         }
         
         // 渲染游戏板
@@ -764,31 +1000,33 @@
                 tile.className = value === null ? 'tile empty' : 'tile';
                 
                 if (value !== null) {
-                    tile.dataset.value = value; // 存储原始位置索引
-                    tile.dataset.index = index; // 存储当前位置索引
+                    tile.dataset.value = value;
+                    tile.dataset.index = index;
                     
-                    // 设置背景图片
-                    if (gameState.tileImages[value]) {
+                    // 设置背景图片或颜色
+                    if (typeof gameState.tileImages[value] === 'string') {
                         tile.style.backgroundImage = `url(${gameState.tileImages[value]})`;
-                        tile.style.backgroundSize = '100% 100%';
+                        tile.style.backgroundColor = 'transparent';
+                    } else if (gameState.tileImages[value]) {
+                        tile.style.backgroundColor = gameState.tileImages[value];
                     }
                     
-                    // 添加数字标签（调试用）
+                    // 添加数字标签
                     const numberSpan = document.createElement('span');
                     numberSpan.className = 'tile-number';
                     numberSpan.textContent = value + 1;
                     tile.appendChild(numberSpan);
                     
                     // 添加点击事件
-                    tile.addEventListener('click', function() {
-                        handleTileClick(index);
-                    });
+                    tile.addEventListener('click', () => handleTileClick(index));
                     
-                    // 添加触摸事件（移动端支持）
-                    tile.addEventListener('touchstart', function(e) {
-                        e.preventDefault();
-                        handleTileClick(index);
-                    }, {passive: false});
+                    // 添加触摸事件
+                    if (isTouchDevice) {
+                        tile.addEventListener('touchstart', (e) => {
+                            e.preventDefault();
+                            handleTileClick(index);
+                        }, { passive: false });
+                    }
                 } else {
                     tile.dataset.index = index;
                 }
@@ -803,7 +1041,6 @@
                 return;
             }
             
-            // 检查是否与空白位置相邻
             if (isAdjacentToEmpty(clickedIndex)) {
                 moveTile(clickedIndex);
             }
@@ -816,29 +1053,55 @@
             const tileRow = Math.floor(index / 4);
             const tileCol = index % 4;
             
-            // 检查是否在同一行且列相邻，或同一列且行相邻
             return (tileRow === emptyRow && Math.abs(tileCol - emptyCol) === 1) ||
                    (tileCol === emptyCol && Math.abs(tileRow - emptyRow) === 1);
         }
         
         // 移动方块
         function moveTile(fromIndex) {
-            // 交换方块和空白位置
             [gameState.board[gameState.emptyIndex], gameState.board[fromIndex]] = 
             [gameState.board[fromIndex], gameState.board[gameState.emptyIndex]];
             
-            // 更新空白位置索引
             gameState.emptyIndex = fromIndex;
-            
-            // 更新步数
             gameState.moveCount++;
             moveCountElement.textContent = gameState.moveCount;
             
-            // 重新渲染游戏板
             renderBoard();
-            
-            // 检查是否获胜
             checkWin();
+        }
+        
+        // 通过方向移动
+        function moveByDirection(direction) {
+            if (!gameState.isGameActive) return;
+            
+            let tileToMove = -1;
+            
+            switch(direction) {
+                case 'up':
+                    if (gameState.emptyIndex < 12) {
+                        tileToMove = gameState.emptyIndex + 4;
+                    }
+                    break;
+                case 'down':
+                    if (gameState.emptyIndex > 3) {
+                        tileToMove = gameState.emptyIndex - 4;
+                    }
+                    break;
+                case 'left':
+                    if (gameState.emptyIndex % 4 < 3) {
+                        tileToMove = gameState.emptyIndex + 1;
+                    }
+                    break;
+                case 'right':
+                    if (gameState.emptyIndex % 4 > 0) {
+                        tileToMove = gameState.emptyIndex - 1;
+                    }
+                    break;
+            }
+            
+            if (tileToMove !== -1) {
+                moveTile(tileToMove);
+            }
         }
         
         // 打乱游戏板
@@ -848,52 +1111,28 @@
             }
             
             const shuffleSteps = gameState.difficultySteps[gameState.currentDifficulty];
-            
-            // 保存当前空白位置
             let currentEmptyIndex = gameState.emptyIndex;
             
-            // 执行多次随机移动来打乱
             for (let i = 0; i < shuffleSteps; i++) {
-                // 获取所有可移动的方块索引
                 const movableTiles = [];
                 
-                // 检查上方
-                if (currentEmptyIndex > 3) {
-                    movableTiles.push(currentEmptyIndex - 4);
-                }
-                // 检查下方
-                if (currentEmptyIndex < 12) {
-                    movableTiles.push(currentEmptyIndex + 4);
-                }
-                // 检查左侧
-                if (currentEmptyIndex % 4 > 0) {
-                    movableTiles.push(currentEmptyIndex - 1);
-                }
-                // 检查右侧
-                if (currentEmptyIndex % 4 < 3) {
-                    movableTiles.push(currentEmptyIndex + 1);
-                }
+                if (currentEmptyIndex > 3) movableTiles.push(currentEmptyIndex - 4);
+                if (currentEmptyIndex < 12) movableTiles.push(currentEmptyIndex + 4);
+                if (currentEmptyIndex % 4 > 0) movableTiles.push(currentEmptyIndex - 1);
+                if (currentEmptyIndex % 4 < 3) movableTiles.push(currentEmptyIndex + 1);
                 
-                // 随机选择一个可移动的方块
                 const randomIndex = Math.floor(Math.random() * movableTiles.length);
                 const tileToMove = movableTiles[randomIndex];
                 
-                // 移动这个方块
                 [gameState.board[currentEmptyIndex], gameState.board[tileToMove]] = 
                 [gameState.board[tileToMove], gameState.board[currentEmptyIndex]];
                 
-                // 更新空白位置索引
                 currentEmptyIndex = tileToMove;
             }
             
-            // 更新游戏状态
             gameState.emptyIndex = currentEmptyIndex;
-            
-            // 重置步数
             gameState.moveCount = 0;
             moveCountElement.textContent = gameState.moveCount;
-            
-            // 重新渲染游戏板
             renderBoard();
         }
         
@@ -904,17 +1143,12 @@
             gameState.isGameActive = true;
             resetGameStats();
             
-            // 确保图片已加载
-            await loadAndRenderImage();
-            
-            // 启动计时器
             clearInterval(gameState.timerInterval);
             gameState.timerInterval = setInterval(() => {
                 gameState.gameTime++;
                 updateTimer();
             }, 1000);
             
-            // 更新按钮文本
             shuffleBtn.textContent = '重新打乱';
         }
         
@@ -933,25 +1167,21 @@
             timerElement.textContent = `${minutes}:${seconds}`;
         }
         
-        // 检查是否获胜 - 修复版
+        // 检查是否获胜
         function checkWin() {
-            // 检查是否按顺序排列（0-14，最后一个是空位）
             for (let i = 0; i < 15; i++) {
                 if (gameState.board[i] !== i) {
                     return false;
                 }
             }
             
-            // 检查最后一个位置是否为空
             if (gameState.board[15] !== null) {
                 return false;
             }
             
-            // 游戏获胜
             gameState.isGameActive = false;
             clearInterval(gameState.timerInterval);
             
-            // 更新获胜消息
             winMovesElement.textContent = gameState.moveCount;
             winTimeElement.textContent = timerElement.textContent;
             
@@ -961,7 +1191,6 @@
             
             winDifficultyElement.textContent = difficultyText;
             
-            // 显示获胜消息
             setTimeout(() => {
                 winMessage.classList.add('show');
             }, 500);
@@ -971,33 +1200,18 @@
         function showHint() {
             if (!gameState.isGameActive) return;
             
-            // 移除之前的高亮
             const tiles = document.querySelectorAll('.tile:not(.empty)');
             tiles.forEach(tile => {
                 tile.style.boxShadow = '';
             });
             
-            // 高亮可移动的方块
             const movableTiles = [];
             
-            // 检查上方
-            if (gameState.emptyIndex > 3) {
-                movableTiles.push(gameState.emptyIndex - 4);
-            }
-            // 检查下方
-            if (gameState.emptyIndex < 12) {
-                movableTiles.push(gameState.emptyIndex + 4);
-            }
-            // 检查左侧
-            if (gameState.emptyIndex % 4 > 0) {
-                movableTiles.push(gameState.emptyIndex - 1);
-            }
-            // 检查右侧
-            if (gameState.emptyIndex % 4 < 3) {
-                movableTiles.push(gameState.emptyIndex + 1);
-            }
+            if (gameState.emptyIndex > 3) movableTiles.push(gameState.emptyIndex - 4);
+            if (gameState.emptyIndex < 12) movableTiles.push(gameState.emptyIndex + 4);
+            if (gameState.emptyIndex % 4 > 0) movableTiles.push(gameState.emptyIndex - 1);
+            if (gameState.emptyIndex % 4 < 3) movableTiles.push(gameState.emptyIndex + 1);
             
-            // 高亮这些方块
             movableTiles.forEach(index => {
                 const tile = document.querySelector(`.tile[data-index="${index}"]`);
                 if (tile) {
@@ -1005,7 +1219,6 @@
                 }
             });
             
-            // 3秒后移除高亮
             setTimeout(() => {
                 movableTiles.forEach(index => {
                     const tile = document.querySelector(`.tile[data-index="${index}"]`);
@@ -1028,7 +1241,6 @@
         function setDifficulty(difficulty) {
             gameState.currentDifficulty = difficulty;
             
-            // 更新按钮样式
             difficultyButtons.forEach(btn => {
                 if (btn.dataset.difficulty === difficulty) {
                     btn.classList.add('active');
@@ -1036,6 +1248,22 @@
                     btn.classList.remove('active');
                 }
             });
+        }
+        
+        // 切换图片
+        async function switchImage(imageIndex) {
+            await loadFullImage(imageIndex);
+            
+            gameState.board = Array.from({length: 16}, (_, i) => i < 15 ? i : null);
+            gameState.emptyIndex = 15;
+            
+            if (gameState.isGameActive) {
+                gameState.moveCount = 0;
+                moveCountElement.textContent = gameState.moveCount;
+            }
+            
+            renderBoard();
+            setActiveImageButton(imageIndex);
         }
         
         // 设置活动图片按钮
@@ -1050,44 +1278,53 @@
             });
         }
         
-        // 切换图片
-        async function switchImage(imageUrl, index) {
-            gameState.currentImage = imageUrl;
-            setActiveImageButton(index);
-            
-            // 重置游戏板为初始状态
-            gameState.board = Array.from({length: 16}, (_, i) => i < 15 ? i : null);
-            gameState.emptyIndex = 15;
-            
-            // 加载新图片
-            await loadAndRenderImage();
-            
-            // 如果游戏已开始，重置游戏
-            if (gameState.isGameActive) {
-                gameState.moveCount = 0;
-                moveCountElement.textContent = gameState.moveCount;
-            }
-            
-            renderBoard();
-        }
-        
         // 初始化图片选择器
-        function initImageSelector() {
+        async function initImageSelector() {
             imageButtonsContainer.innerHTML = '';
             
-            imageList.forEach((image, index) => {
+            const availableImages = await testImageAvailability();
+            
+            availableImages.forEach((imageInfo, index) => {
                 const button = document.createElement('button');
                 button.className = 'image-btn';
                 if (index === 0) button.classList.add('active');
                 
-                button.innerHTML = `
-                    <img src="${image.url}" alt="${image.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMzOTNFNDYiLz48cGF0aCBkPSJNMTAgMTVIMzBWMTlIMTBWMTVaTTEwIDIzSDI2VjI3SDEwVjIzWiIgZmlsbD0iI0JCQkJCQiIvPjwvc3ZnPg=='">
-                    <div>${image.name}</div>
-                `;
+                if (imageInfo.isAvailable && imageInfo.thumbnailPath) {
+                    // 加载缩略图
+                    const img = document.createElement('img');
+                    img.src = imageInfo.thumbnailPath;
+                    img.alt = imageInfo.name;
+                    img.loading = 'lazy';
+                    img.onerror = function() {
+                        this.style.display = 'none';
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'placeholder';
+                        placeholder.textContent = imageInfo.name.charAt(0);
+                        button.insertBefore(placeholder, button.firstChild);
+                    };
+                    
+                    button.innerHTML = '';
+                    button.appendChild(img);
+                    button.innerHTML += `<div>${imageInfo.name}</div>`;
+                } else {
+                    // 显示占位符
+                    button.innerHTML = `
+                        <div class="placeholder">${imageInfo.name.charAt(0)}</div>
+                        <div>${imageInfo.name}</div>
+                    `;
+                }
                 
                 button.addEventListener('click', async () => {
-                    await switchImage(image.url, index);
+                    await switchImage(index);
                 });
+                
+                // 添加触摸事件
+                if (isTouchDevice) {
+                    button.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        switchImage(index);
+                    }, { passive: false });
+                }
                 
                 imageButtonsContainer.appendChild(button);
             });
@@ -1097,36 +1334,82 @@
         function handleKeyDown(e) {
             if (!gameState.isGameActive) return;
             
-            let tileToMove = -1;
+            let direction = null;
             
             switch(e.key) {
                 case 'ArrowUp':
-                    if (gameState.emptyIndex < 12) {
-                        tileToMove = gameState.emptyIndex + 4;
-                    }
+                case 'w':
+                case 'W':
+                    direction = 'up';
                     break;
                 case 'ArrowDown':
-                    if (gameState.emptyIndex > 3) {
-                        tileToMove = gameState.emptyIndex - 4;
-                    }
+                case 's':
+                case 'S':
+                    direction = 'down';
                     break;
                 case 'ArrowLeft':
-                    if (gameState.emptyIndex % 4 < 3) {
-                        tileToMove = gameState.emptyIndex + 1;
-                    }
+                case 'a':
+                case 'A':
+                    direction = 'left';
                     break;
                 case 'ArrowRight':
-                    if (gameState.emptyIndex % 4 > 0) {
-                        tileToMove = gameState.emptyIndex - 1;
-                    }
+                case 'd':
+                case 'D':
+                    direction = 'right';
                     break;
                 default:
                     return;
             }
             
-            if (tileToMove !== -1) {
-                moveTile(tileToMove);
-                e.preventDefault(); // 防止页面滚动
+            if (direction) {
+                moveByDirection(direction);
+                e.preventDefault();
+            }
+        }
+        
+        // 初始化应用
+        async function initApp() {
+            // 显示移动端提示
+            if (isMobile || isTouchDevice) {
+                document.querySelector('.mobile-notice').style.display = 'block';
+                touchControls.style.display = 'grid';
+            }
+            
+            // 初始化图片选择器
+            await initImageSelector();
+            
+            // 初始化游戏
+            await initGame();
+            
+            // 隐藏加载提示
+            loadingElement.style.display = 'none';
+        }
+        
+        // 浏览器兼容性检查
+        function checkCompatibility() {
+            const issues = [];
+            
+            if (typeof Promise === 'undefined') {
+                issues.push("您的浏览器不支持Promise，请升级浏览器");
+            }
+            
+            if (!document.addEventListener) {
+                issues.push("您的浏览器不支持现代事件监听API");
+            }
+            
+            if (!Array.from) {
+                issues.push("您的浏览器不支持Array.from方法");
+            }
+            
+            if (!HTMLCanvasElement) {
+                issues.push("您的浏览器不支持Canvas API");
+            }
+            
+            if (issues.length > 0) {
+                console.warn("兼容性问题:", issues);
+                const errorMsg = "您的浏览器可能不完全支持此游戏的所有功能，请考虑更新到最新版本的Chrome、Firefox、Edge或Safari浏览器。";
+                errorElement.style.display = 'block';
+                errorElement.textContent = errorMsg;
             }
         }
         
@@ -1143,58 +1426,63 @@
         difficultyButtons.forEach(btn => {
             btn.addEventListener('click', function() {
                 setDifficulty(this.dataset.difficulty);
-                // 如果游戏已开始，重新打乱
                 if (gameState.isGameActive) {
                     shuffleBoard();
                 }
             });
         });
         
+        // 触摸按钮事件
+        touchButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                moveByDirection(this.dataset.direction);
+            });
+            
+            if (isTouchDevice) {
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    moveByDirection(this.dataset.direction);
+                }, { passive: false });
+            }
+        });
+        
         // 键盘事件
         document.addEventListener('keydown', handleKeyDown);
         
-        // 初始化应用
-        async function initApp() {
-            // 测试图片可用性
-            imageList = await testImageAvailability();
-            
-            // 初始化图片选择器
-            initImageSelector();
-            
-            // 初始化游戏
-            await initGame();
-            
-            // 隐藏加载提示
-            loadingElement.style.display = 'none';
-        }
+        // 防止移动端缩放
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
         
-        // 浏览器兼容性检查
-        function checkCompatibility() {
-            const issues = [];
-            
-            // 检查关键API支持
-            if (!document.addEventListener) {
-                issues.push("您的浏览器不支持现代事件监听API");
+        // 防止双击缩放
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
             }
-            
-            if (!Array.from) {
-                issues.push("您的浏览器不支持Array.from方法");
-            }
-            
-            if (!HTMLCanvasElement.prototype.toDataURL) {
-                issues.push("您的浏览器不支持Canvas API");
-            }
-            
-            if (issues.length > 0) {
-                console.warn("兼容性问题:", issues);
-                alert("您的浏览器可能不完全支持此游戏的所有功能，请考虑更新到最新版本的Chrome、Firefox、Edge或Safari浏览器。");
-            }
-        }
+            lastTouchEnd = now;
+        }, false);
         
         // 页面加载完成后初始化应用
         window.addEventListener('load', () => {
             checkCompatibility();
             initApp();
+        });
+        
+        // 处理页面可见性变化
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && gameState.isGameActive) {
+                clearInterval(gameState.timerInterval);
+            } else if (!document.hidden && gameState.isGameActive) {
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = setInterval(() => {
+                    gameState.gameTime++;
+                    updateTimer();
+                }, 1000);
+            }
         });
     </script>
 </body>
