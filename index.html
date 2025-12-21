@@ -883,8 +883,8 @@
             for (let i = 1; i <= 8; i++) {
                 imageFiles.push({
                     name: `寿星${i}`,
-                    path: `images/${i}.jpg`,
-                    thumbnailPath: `images/thumbnails/${i}.jpg` // 假设有缩略图
+                    path: `https://halft0n.github.io/test/images/${i}.jpg`,
+                    thumbnailPath: `https://halft0n.github.io/test/images/thumbnails/${i}.jpg` // 假设有缩略图
                 });
             }
 
@@ -1189,10 +1189,10 @@
 
             // 创建预览图（颜色拼图）- 3x3
             const canvas = document.createElement('canvas');
-            canvas.width = 300;
-            canvas.height = 300;
+            canvas.width = 1020;
+            canvas.height = 1020;
             const ctx = canvas.getContext('2d');
-            const tileSize = 100;
+            const tileSize = 340;
 
             for (let row = 0; row < 3; row++) {
                 for (let col = 0; col < 3; col++) {
@@ -1229,9 +1229,9 @@
                 const ctx = canvas.getContext('2d');
                 const size = Math.min(imageElement.width, imageElement.height);
 
-                // 3x3，每个切片100px，总共300px
-                canvas.width = 300;
-                canvas.height = 300;
+                // 3x3，每个切片 340 px，总共 1020 px
+                canvas.width = 1020;
+                canvas.height = 1020;
 
                 // 裁剪图片为正方形
                 ctx.drawImage(
@@ -1240,14 +1240,14 @@
                     (imageElement.height - size) / 2,
                     size, size,
                     0, 0,
-                    300, 300
+                    1020, 1020
                 );
 
                 // 保存预览图
                 const previewDataUrl = canvas.toDataURL();
 
                 // 创建图片切片 - 3x3
-                const tileSize = 100;
+                const tileSize = 340;
                 const tiles = [];
 
                 for (let row = 0; row < 3; row++) {
